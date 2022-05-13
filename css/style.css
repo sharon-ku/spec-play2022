@@ -23,6 +23,21 @@ body {
   overflow: hidden; /* Hide anything that goes off the window size */
 }
 
+#body-wrapper {
+  padding: 30px;
+}
+
+#emoji-input-bubble {
+  background: orange;
+  width: 100%;
+  height: 100px;
+
+  /* display: flex; */
+  text-align: center;
+
+  margin: 50px auto;
+}
+
 /* Keyboard that contains all usable emojis */
 #emoji-keyboard {
   background: grey;
