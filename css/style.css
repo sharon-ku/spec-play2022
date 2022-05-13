@@ -9,12 +9,40 @@ Also hides overflow.
 
 **********************************************/
 
-body {
+* {
   padding: 0;
   margin: 0;
+  box-sizing: border-box;
+}
+
+body {
   display: grid; /* Set up the grid and justify/align to center */
   justify-content: center;
   align-content: center;
   height: 100vh; /* Body is the height of the viewport */
   overflow: hidden; /* Hide anything that goes off the window size */
+}
+
+/* Keyboard that contains all usable emojis */
+#emoji-keyboard {
+  background: grey;
+
+  max-width: 800px;
+  letter-spacing: 7px;
+  font-size: 2.5rem;
+  padding: 20px;
+  border-radius: 20px;
+
+  display: flex;
+  flex-flow: row wrap;
+  /* width: 700px; */
+  /* justify-content: space-between; */
+}
+
+.emoji-character {
+  /* padding: 20px; */
+  width: 80px;
+  /* background: yellow; */
+  margin: 5px;
+  text-align: center;
 }
