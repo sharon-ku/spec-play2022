@@ -24,6 +24,16 @@ for (let i = 0; i < splitEmojis.length; i++) {
   );
 }
 
+// When clicked on emoji from keyboard:
+$(`.emoji-character`).click(function () {
+  // Store emoji that was clicked
+  let containedEmoji = $(this).text();
+  // Add it to the input bubble
+  $(`#emoji-input-bubble`).append(containedEmoji);
+  // Remove emoji from keyboard
+  $(this).remove();
+});
+
 /*------------------------
 p5 below - unused for now
 -------------------------*/
