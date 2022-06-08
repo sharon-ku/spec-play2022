@@ -36,6 +36,35 @@ $(`.emoji-character`).click(function () {
 });
 
 /*------------------------
+Testing separate body parts of NPC
+https://www.youtube.com/watch?v=L1E_7FoTrik&ab_channel=TheTechTrain
+-------------------------*/
+
+window.onload = function () {
+  // Create file name for test head
+  let testHead = new Image();
+  // Set number of head files (here it's 3)
+  let testHeadNum = Math.floor(Math.random() * 3);
+  let testHeadName = "assets/images/head" + testHeadNum + ".png";
+  testHead.src = testHeadName;
+
+  testHead.onload = function () {
+    buildTestBody();
+  };
+
+  function buildTestBody() {
+    // Create canvas
+    let canvas = document.getElementById("canvas");
+    let ctx = canvas.getContext("2d");
+    canvas.width = 400;
+    canvas.height = 400;
+
+    // Place image in center: draw head
+    ctx.drawImage(testHead, (400 - testHead.width) / 2, 50);
+  }
+};
+
+/*------------------------
 p5 below - unused for now
 -------------------------*/
 

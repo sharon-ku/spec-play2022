@@ -29,6 +29,10 @@ body {
   /* overflow: hidden; */ /* Hide anything that goes off the window size */
 }
 
+.test-head-canvas {
+  z-index: 1001;
+}
+
 #body-wrapper {
   padding: 30px;
 }
