@@ -121,3 +121,7 @@ body {
   cursor: pointer;
   /* filter: hue-rotate(80deg); */
 }
+
+#send-button {
+  font-size: 3rem;
+}

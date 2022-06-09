@@ -25,6 +25,9 @@ for (let i = 0; i < splitEmojis.length; i++) {
   );
 }
 
+// Add Send button
+$(`#emoji-keyboard`).append(`<button id="send-button">Send</button>`);
+
 // When clicked on emoji from keyboard:
 $(`.emoji-character`).click(function () {
   // Store emoji that was clicked
