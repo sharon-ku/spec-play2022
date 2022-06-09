@@ -38,6 +38,11 @@ $(`.emoji-character`).click(function () {
   // $(this).remove();
 });
 
+// After clicking on Send button, remove message in input-bubble
+$(`#send-button`).click(function () {
+  $(`#emoji-input-bubble`).empty();
+});
+
 /*------------------------
 Testing separate body parts of NPC
 https://www.youtube.com/watch?v=L1E_7FoTrik&ab_channel=TheTechTrain
