@@ -11,6 +11,35 @@ Description will go here
 let keyboardEmojis = `🎑🌄🥻🙉🍅🥽🧶👮‍♀️🙊🤞👩‍👧‍👦⚽️👠🧐🧥💂👩‍🦱🌌🐣⌚️👙😉🐗😞🤛🐨🩰🖕👩‍👦👎😒`;
 // let keyboardEmojis = `🎑🌄🥻🙉🍅👩‍👧‍👦`;
 
+// Emojis from: https://www.freecodecamp.org/news/all-emojis-emoji-list-for-copy-and-paste/
+let smileyEmojis = `🙂😀😄😁😅😆🤣😂🙃😉😊😇😎🤓🧐🥳🤗🤭🤫`;
+let emotionalEmojis = `🥰😍🤩😘😗😚😙🤔`;
+let tongueEmojis = `😋😛😜🤪😝🤑`;
+let neutralEmojis = `😐🤐🤨😑😶😏😒🙄😬‍🤥`;
+let sleepyEmojis = `😪😴😌😔🤤`;
+let sickEmojis = `😷🤒🤕🤢🤮🤧🥵🥶🥴😵🤯`;
+let concernedEmojis = `😕😟🙁😮😯😲😳🥺😦😧😨😰😥😢😭😱😖😞😓😩😫🥱`;
+let badEmojis = `😤😡😠🤬😈👿💀`;
+
+// Temporarily categorizing emojis for sake of simplicity:
+let positiveEmojis = smileyEmojis + emotionalEmojis + tongueEmojis;
+let negativeEmojis =
+  neutralEmojis + sleepyEmojis + sickEmojis + concernedEmojis + badEmojis;
+
+// Grapheme Splitter is a library that handles splitting emojis properly
+// Without it, emojis like this one 👩‍👧‍👦 will count as several emojis
+let positiveEmojiSplitter = new GraphemeSplitter();
+let negativeEmojiSplitter = new GraphemeSplitter();
+
+// Split two-char emojis and six-char combined emoji into arrays
+let positiveEmojisArray = positiveEmojiSplitter.splitGraphemes(positiveEmojis);
+let negativeEmojisArray = negativeEmojiSplitter.splitGraphemes(negativeEmojis);
+
+// Odds of getting a positive emoji
+const CHANCE_TO_GET_POSITIVE_EMOJI = 0.5;
+// Set the next emoji after clicking "Send" button
+let nextEmojiToDisplay = undefined;
+
 // Grapheme Splitter is a library that handles splitting emojis properly
 // Without it, emojis like this one 👩‍👧‍👦 will count as several emojis
 let splitter = new GraphemeSplitter();
@@ -38,9 +67,23 @@ $(`.emoji-character`).click(function () {
   // $(this).remove();
 });
 
-// After clicking on Send button, remove message in input-bubble
+// After clicking on Send button
 $(`#send-button`).click(function () {
+  // Remove message in input-bubble
   $(`#emoji-input-bubble`).empty();
+
+  // Randomly update the facial expression of NPC
+  if (Math.random() < CHANCE_TO_GET_POSITIVE_EMOJI) {
+    // Fetch a positive emoji
+    nextEmojiToDisplay = random(positiveEmojisArray);
+  } else {
+    // Fetch a negative emoji
+    nextEmojiToDisplay = random(negativeEmojisArray);
+  }
+
+  console.log(nextEmojiToDisplay);
+
+  $(`#emoji-face`).text(nextEmojiToDisplay);
 });
 
 /*------------------------
