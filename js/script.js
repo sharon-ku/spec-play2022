@@ -1,4 +1,4 @@
-/**
+/*
 Speculative Play 2022
 Sharon Ku
 
@@ -11,6 +11,9 @@ Description will go here
 let keyboardEmojis = `🎑🌄🥻🙉🍅🥽🧶👮‍♀️🙊🤞👩‍👧‍👦⚽️👠🧐🧥💂👩‍🦱🌌🐣⌚️👙😉🐗😞🤛🐨🩰🖕👩‍👦👎😒`;
 // let keyboardEmojis = `🎑🌄🥻🙉🍅👩‍👧‍👦`;
 
+/*
+Handle NPC facial expressions
+*/
 // Emojis from: https://www.freecodecamp.org/news/all-emojis-emoji-list-for-copy-and-paste/
 let smileyEmojis = `🙂😀😄😁😅😆🤣😂🙃😉😊😇😎🤓🧐🥳🤗🤭🤫`;
 let emotionalEmojis = `🥰😍🤩😘😗😚😙🤔`;
@@ -39,6 +42,19 @@ let negativeEmojisArray = negativeEmojiSplitter.splitGraphemes(negativeEmojis);
 const CHANCE_TO_GET_POSITIVE_EMOJI = 0.5;
 // Set the next emoji after clicking "Send" button
 let nextEmojiToDisplay = undefined;
+
+/*
+Handle NPC responses
+*/
+// Will either positive or negative
+let responseType = undefined;
+// Response message from NPC after clicking "Send" button
+let npcResponseMessage = undefined;
+
+// Other random emojis to mix in with facial expressions
+let otherEmojis = `💋💖💚💯💦💣💤👋🖖👌🤏🤞🤟🖕👍👎👏🙏💪🦶👀👅🍆🍑🌙🌞⭐🌈🔥✨🎉🏆💩🤡👻👽👑🔪🎈💰🪓🔫`;
+// Split emojis into array
+let otherEmojisArray = positiveEmojiSplitter.splitGraphemes(otherEmojis);
 
 // Grapheme Splitter is a library that handles splitting emojis properly
 // Without it, emojis like this one 👩‍👧‍👦 will count as several emojis
@@ -71,20 +87,57 @@ $(`.emoji-character`).click(function () {
 $(`#send-button`).click(function () {
   // Remove message in input-bubble
   $(`#emoji-input-bubble`).empty();
+  // Empty out npcResponseMessage
+  npcResponseMessage = ``;
+  $(`#npc-response-message`).empty();
 
   // Randomly update the facial expression of NPC
   if (Math.random() < CHANCE_TO_GET_POSITIVE_EMOJI) {
+    responseType = `positive`;
+  } else {
+    responseType = `negative`;
+  }
+
+  console.log(responseType);
+
+  // Set response based on emotion
+  if (responseType === `positive`) {
     // Fetch a positive emoji
     nextEmojiToDisplay = random(positiveEmojisArray);
-  } else {
+
+    // Compose a positive response message
+    composeAMessage(positiveEmojisArray);
+
+    console.log(npcResponseMessage);
+  } else if (responseType === `negative`) {
     // Fetch a negative emoji
     nextEmojiToDisplay = random(negativeEmojisArray);
+
+    // Compose a negative response message
+    composeAMessage(negativeEmojisArray);
+
+    console.log(npcResponseMessage);
   }
 
   console.log(nextEmojiToDisplay);
 
   $(`#emoji-face`).text(nextEmojiToDisplay);
+  $(`#npc-response-message`).text(npcResponseMessage);
 });
+
+function composeAMessage(emojiArraySet) {
+  // Compose a positive response message
+  for (let i = 0; i < Math.ceil(Math.random() * 4); i++) {
+    let newCharacter;
+    if (Math.random() < 0.2) {
+      newCharacter = random(emojiArraySet);
+    } else {
+      newCharacter = random(otherEmojisArray);
+    }
+
+    npcResponseMessage += newCharacter;
+  }
+}
 
 /*------------------------
 Testing separate body parts of NPC
