@@ -110,6 +110,27 @@ $(`.emoji-character`).click(function () {
   // $(this).remove();
 });
 
+// Remove input emoji if backspace or delete key pressed
+$(document).keydown(function (e) {
+  // 8: backspace key
+  // 46: delete key
+  if (e.keyCode === 8 || e.keyCode === 46) {
+    // Grab current string in input and split emojis properly into array
+    let currentStringArray = splitter.splitGraphemes(
+      $(`#emoji-input-bubble`).text()
+    );
+    // Remove 1 emoji from end of string
+    let strMinus = currentStringArray.slice(0, -1);
+    // Clear what's currently in input field
+    $(`#emoji-input-bubble`).text(``);
+
+    // Restore the emoji input field
+    for (let i = 0; i < strMinus.length; i++) {
+      $(`#emoji-input-bubble`).append(strMinus[i]);
+    }
+  }
+});
+
 // After clicking on Send button
 $(`#send-button`).click(function () {
   // Remove message in input-bubble
