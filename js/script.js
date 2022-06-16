@@ -11,6 +11,9 @@ Description will go here
 let keyboardEmojis = `🎑🌄🥻🙉🍅🥽🧶👮‍♀️🙊🤞👩‍👧‍👦⚽️👠🧐🧥💂👩‍🦱🌌🐣⌚️👙😉🐗😞🤛🐨🩰🖕👩‍👦👎😒`;
 // let keyboardEmojis = `🎑🌄🥻🙉🍅👩‍👧‍👦`;
 
+// Max emojis user can type in
+let maxInputEmojis = 10;
+
 /*
 Handle NPC facial expressions
 */
@@ -91,8 +94,18 @@ $(`#emoji-keyboard`).append(`<button id="send-button">Send</button>`);
 $(`.emoji-character`).click(function () {
   // Store emoji that was clicked
   let containedEmoji = $(this).text();
-  // Add it to the input bubble
-  $(`#emoji-input-bubble`).append(containedEmoji);
+
+  // Add it to the input bubble, constraining to max 10 emojis
+  // splintInputEmojis: number of emojis in input box
+  let splitInputEmojis = splitter.splitGraphemes(
+    $(`#emoji-input-bubble`).text()
+  );
+  console.log(splitInputEmojis.length);
+
+  if (splitInputEmojis.length < maxInputEmojis + 1) {
+    $(`#emoji-input-bubble`).append(containedEmoji);
+  }
+
   // // Remove emoji from keyboard
   // $(this).remove();
 });
