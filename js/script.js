@@ -11,32 +11,6 @@ Description will go here
 let keyboardEmojis = `🎑🌄🥻🙉🍅🥽🧶👮‍♀️🙊🤞👩‍👧‍👦⚽️👠🧐🧥💂👩‍🦱🌌🐣⌚️👙😉🐗😞🤛🐨🩰🖕👩‍👦👎😒`;
 // let keyboardEmojis = `🎑🌄🥻🙉🍅👩‍👧‍👦`;
 
-// /*
-// Handle NPC facial expressions
-// */
-// // Emojis from: https://www.freecodecamp.org/news/all-emojis-emoji-list-for-copy-and-paste/
-// let smileyEmojis = `🙂😀😄😁😅😆🤣😂🙃😉😊😇😎🤓🧐🥳🤗🤭🤫`;
-// let emotionalEmojis = `🥰😍🤩😘😗😚😙🤔`;
-// let tongueEmojis = `😋😛😜🤪😝🤑`;
-// let neutralEmojis = `😐🤐🤨😑😶😏😒🙄😬‍🤥`;
-// let sleepyEmojis = `😪😴😌😔🤤`;
-// let sickEmojis = `😷🤒🤕🤢🤮🤧🥵🥶🥴😵🤯`;
-// let concernedEmojis = `😕😟🙁😮😯😲😳🥺😦😧😨😰😥😢😭😱😖😞😓😩😫🥱`;
-// let badEmojis = `😤😡😠🤬😈👿💀`;
-//
-// // Temporarily categorizing emojis for sake of simplicity:
-// let positiveEmojis = smileyEmojis + emotionalEmojis + tongueEmojis;
-// let negativeEmojis =
-//   neutralEmojis + sleepyEmojis + sickEmojis + concernedEmojis + badEmojis;
-//
-// // Grapheme Splitter is a library that handles splitting emojis properly
-// // Without it, emojis like this one 👩‍👧‍👦 will count as several emojis
-// let splitter = new GraphemeSplitter();
-//
-// // Split two-char emojis and six-char combined emoji into arrays
-// let positiveEmojisArray = splitter.splitGraphemes(positiveEmojis);
-// let negativeEmojisArray = splitter.splitGraphemes(negativeEmojis);
-
 /*
 Handle NPC facial expressions
 */
@@ -56,8 +30,20 @@ let unusedEmojis = `🤐‍🤥`;
 // Without it, emojis like this one 👩‍👧‍👦 will count as several emojis
 let splitter = new GraphemeSplitter();
 
+// All categories of emojis
+let emojiCategories = [
+  `horny`,
+  `inLove`,
+  `happy`,
+  `neutral`,
+  `surprised`,
+  `bored`,
+  `sad`,
+  `sick`,
+  `angry`,
+];
+
 // Split two-char emojis and six-char combined emoji into arrays
-let numEmojiCategories = 9;
 let hornyEmojisArray = splitter.splitGraphemes(hornyEmojis);
 let inLoveEmojisArray = splitter.splitGraphemes(inLoveEmojis);
 let happyEmojisArray = splitter.splitGraphemes(happyEmojis);
@@ -78,6 +64,8 @@ Handle NPC responses
 */
 // Will either positive or negative
 let responseType = undefined;
+// Total number of emoji characters in response string
+const NPC_RESPONSE_MAX_LENGTH = 3;
 // Response message from NPC after clicking "Send" button
 let npcResponseMessage = undefined;
 
@@ -117,52 +105,12 @@ $(`#send-button`).click(function () {
   npcResponseMessage = ``;
   $(`#npc-response-message`).empty();
 
-  // // Randomly update the facial expression of NPC
-  // if (Math.random() < CHANCE_TO_GET_POSITIVE_EMOJI) {
-  //   responseType = `positive`;
-  // } else {
-  //   responseType = `negative`;
-  // }
-  //
-  // // Set response based on emotion
-  // if (responseType === `positive`) {
-  //   // Fetch a positive emoji
-  //   nextEmojiToDisplay = random(positiveEmojisArray);
-  //
-  //   // Compose a positive response message
-  //   composeAMessage(positiveEmojisArray);
-  //
-  //   console.log(npcResponseMessage);
-  // } else if (responseType === `negative`) {
-  //   // Fetch a negative emoji
-  //   nextEmojiToDisplay = random(negativeEmojisArray);
-  //
-  //   // Compose a negative response message
-  //   composeAMessage(negativeEmojisArray);
-  //
-  //   console.log(npcResponseMessage);
-  // }
-  //
-  // console.log(nextEmojiToDisplay);
-
-  // Randomly update the facial expression of NPC
-  let emojiCategories = [
-    `horny`,
-    `inLove`,
-    `happy`,
-    `neutral`,
-    `surprised`,
-    `bored`,
-    `sad`,
-    `sick`,
-    `angry`,
-  ];
+  // Randomly select the response type of NPC
   let randomIndex = Math.floor(Math.random() * emojiCategories.length);
   let responseType = emojiCategories[randomIndex];
   console.log(responseType);
 
-  // PUT CODE HERE
-
+  // Update facial and verbal reaction based on the response type
   if (responseType === `horny`) {
     setNpcReaction(hornyEmojisArray);
   } else if (responseType === `inLove`) {
@@ -182,23 +130,34 @@ $(`#send-button`).click(function () {
   } else if (responseType === `angry`) {
     setNpcReaction(angryEmojisArray);
   }
-
-  $(`#emoji-face`).text(nextEmojiToDisplay);
-  $(`#npc-response-message`).text(npcResponseMessage);
 });
 
+// Reaction is composed of two parts: the face and the response message
 function setNpcReaction(reactionArray) {
-  // Fetch a positive emoji
-  nextEmojiToDisplay = random(reactionArray);
+  // (1) Update facial expression of emoji
+  updateNpcFace(reactionArray);
 
-  // Compose a positive response message
+  // (2) Compose a response message
   composeAMessage(reactionArray);
 }
 
+// Update NPC's face based on response type
+function updateNpcFace(reactionArray) {
+  // Fetch a positive emoji
+  nextEmojiToDisplay = random(reactionArray);
+  // Update emoji face and response message
+  $(`#emoji-face`).text(nextEmojiToDisplay);
+}
+
+// Compose a response message
 function composeAMessage(emojiArraySet) {
-  // Compose a positive response message
-  for (let i = 0; i < Math.ceil(Math.random() * 3); i++) {
+  // Choose random number of emojis to respond with
+  let randomResponseLength = Math.ceil(Math.random() * NPC_RESPONSE_MAX_LENGTH);
+
+  // Type out the randomized message
+  for (let i = 0; i < randomResponseLength; i++) {
     let newCharacter;
+    // The message is composed of facial expressions and other emojis
     if (Math.random() < 0.2) {
       newCharacter = random(emojiArraySet);
     } else {
@@ -207,6 +166,9 @@ function composeAMessage(emojiArraySet) {
 
     npcResponseMessage += newCharacter;
   }
+
+  // Update response message
+  $(`#npc-response-message`).text(npcResponseMessage);
 }
 
 /*------------------------
