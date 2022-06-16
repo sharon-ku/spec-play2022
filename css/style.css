@@ -35,6 +35,12 @@ body {
   z-index: 1001;
 }
 
+canvas {
+  z-index: 10002;
+
+  position: fixed;
+}
+
 #body-wrapper {
   padding: 30px;
 }
