@@ -7,7 +7,8 @@ Description will go here
 
 "use strict";
 
-let app = new PIXI.Application({ width: 640, height: 360 });
+// For nice resolution on circle, source: https://stackoverflow.com/questions/41932258/how-do-i-antialias-graphics-circle-in-pixijs
+let app = new PIXI.Application({ width: 640, height: 360, antialias: true });
 document.body.appendChild(app.view);
 
 let circle = new PIXI.Graphics();
@@ -17,6 +18,80 @@ circle.x = 320;
 circle.y = 180;
 
 app.stage.addChild(circle);
+
+const faceStyle = new PIXI.TextStyle({
+  fontFamily: "Arial",
+  fontSize: 100,
+  // fontStyle: "italic",
+  // fontWeight: "bold",
+  // fill: ["#ffffff", "#00ff99"], // gradient
+  // stroke: "#4a1850",
+  // strokeThickness: 5,
+  // dropShadow: true,
+  // dropShadowColor: "#000000",
+  // dropShadowBlur: 4,
+  // dropShadowAngle: Math.PI / 6,
+  // dropShadowDistance: 6,
+  // wordWrap: true,
+  // wordWrapWidth: 440,
+  // lineJoin: "round",
+});
+
+let faceText = new PIXI.Text("🙊", faceStyle);
+faceText.x = 320;
+faceText.y = 180;
+// center text
+faceText.anchor.set(0.5);
+
+app.stage.addChild(faceText);
+
+// NPC response message
+let messageStyle = new PIXI.TextStyle({
+  fontFamily: "Arial",
+  fontSize: 40,
+});
+let messageText = new PIXI.Text("🙊", messageStyle);
+messageText.x = 320 + 110;
+messageText.y = 180;
+// center text
+messageText.anchor.set(0, 0.5);
+
+app.stage.addChild(messageText);
+
+// Similar to update()
+// source: https://pixijs.io/examples/#/demos-basic/blendmodes.js
+app.ticker.add(() => {
+  circle.x += 0.05;
+  circle.y += 0.05;
+
+  faceText.x += 0.05;
+  faceText.y += 0.05;
+
+  messageText.x += 0.05;
+  messageText.y += 0.05;
+
+  // iterate through the dudes and update the positions
+  // for (let i = 0; i < dudeArray.length; i++) {
+  //     const dude = dudeArray[i];
+  //     dude.direction += dude.turningSpeed * 0.01;
+  //     dude.x += Math.sin(dude.direction) * dude.speed;
+  //     dude.y += Math.cos(dude.direction) * dude.speed;
+  //     dude.rotation = -dude.direction - Math.PI / 2;
+  //
+  //     // wrap the dudes by testing their bounds...
+  //     if (dude.x < dudeBounds.x) {
+  //         dude.x += dudeBounds.width;
+  //     } else if (dude.x > dudeBounds.x + dudeBounds.width) {
+  //         dude.x -= dudeBounds.width;
+  //     }
+  //
+  //     if (dude.y < dudeBounds.y) {
+  //         dude.y += dudeBounds.height;
+  //     } else if (dude.y > dudeBounds.y + dudeBounds.height) {
+  //         dude.y -= dudeBounds.height;
+  //     }
+  // }
+});
 
 // let keyboardEmojis = `🎑🌄🥻🙉🍅🥽🧶👮‍♀️🙊🤞👩‍👧‍👦⚽️👠🧐🧥💂👩‍🦱🌌🐣⌚️👙😉🐗😞🤛🐨🩰🖕👩‍👦👎😒😕😊🌉🚗👉👐🐽🥳🥑👕🐌🏉🩳🕍🚄🚌🍑⛪️✍️🧵🧳🧑😔🐯🏑`;
 let keyboardEmojis = `🎑🌄🥻🙉🍅🥽🧶👮‍♀️🙊🤞👩‍👧‍👦⚽️👠🧐🧥💂👩‍🦱🌌🐣⌚️👙😉🐗😞🤛🐨🩰🖕👩‍👦👎😒`;
@@ -192,6 +267,9 @@ function updateNpcFace(reactionArray) {
   nextEmojiToDisplay = random(reactionArray);
   // Update emoji face and response message
   $(`#emoji-face`).text(nextEmojiToDisplay);
+
+  // Update emoji face in Pixi
+  faceText.text = nextEmojiToDisplay;
 }
 
 // Compose a response message
@@ -214,6 +292,9 @@ function composeAMessage(emojiArraySet) {
 
   // Update response message
   $(`#npc-response-message`).text(npcResponseMessage);
+
+  // Update response message in Pixi
+  messageText.text = npcResponseMessage;
 }
 
 /*------------------------
