@@ -11,6 +11,7 @@ Description will go here
 let keyboardActive = false;
 keyboardIsInactive();
 
+// Create a PIXI canvas
 // For nice resolution on circle, source: https://stackoverflow.com/questions/41932258/how-do-i-antialias-graphics-circle-in-pixijs
 let app = new PIXI.Application({
   transparent: false,
@@ -32,11 +33,24 @@ class Npc {
     // set to true if currently talking to this npc
     this.talking = false;
 
+    // Body position: all body parts are offset from these coordinates
+    this.x = x;
+    this.y = y;
+
+    this.speed = 0.5;
+    this.vx = 0;
+    this.vy = 0;
+
     this.head = new PIXI.Graphics();
     this.head.beginFill(0x5cafe2);
     this.head.drawCircle(0, 0, 80);
-    this.head.x = x;
-    this.head.y = y;
+    this.head.x = undefined;
+    this.head.y = undefined;
+    // offset from this.x and this.y
+    this.head.offset = {
+      x: 0,
+      y: 0,
+    };
 
     // Opt-in to interactivity
     this.head.interactive = true;
@@ -67,8 +81,14 @@ class Npc {
     });
 
     this.faceText = new PIXI.Text("🙊", this.faceStyle);
-    this.faceText.x = this.head.x;
-    this.faceText.y = this.head.y;
+    this.faceText.x = undefined;
+    this.faceText.y = undefined;
+    // offset from this.x and this.y
+    this.faceText.offset = {
+      x: 0,
+      y: 0,
+    };
+
     // center text
     this.faceText.anchor.set(0.5);
 
@@ -80,10 +100,18 @@ class Npc {
       fontSize: 40,
     });
     this.messageText = new PIXI.Text("🙊", this.messageStyle);
-    this.messageText.x = this.head.x + 110;
-    this.messageText.y = this.head.y;
+    this.messageText.x = undefined;
+    this.messageText.y = undefined;
+    // offset from this.x and this.y
+    this.messageText.offset = {
+      x: 110,
+      y: 0,
+    };
     // center text
     this.messageText.anchor.set(0, 0.5);
+
+    // Update body part positions that are relative to this.x and this.y
+    this.updateBodyPartPositions();
 
     app.stage.addChild(this.messageText);
   }
@@ -106,18 +134,52 @@ class Npc {
     }
   }
 
-  // Handles walking
+  // Code that should be updated every frame
+  loop() {
+    // Constrain npc's movement along x and y directions
+    this.constrainMovement();
+
+    // Handles random walking
+    this.walk();
+  }
+
+  // Constrain npc's movement along x and y directions
+  constrainMovement() {
+    // If npc exceeds left or right of canvas, stop movement in s direction
+    if (this.x < 50 || this.x > app.screen.width - 50) {
+      this.vx = 0;
+    }
+
+    // If npc exceeds top or bottom of canvas, stop movement in y direction
+    if (this.y < 50 || this.y > app.screen.height - 50) {
+      this.vy = 0;
+    }
+  }
+
+  // Handles random walking
   walk() {
-    this.walkingSpeed = 0.02;
+    if (Math.random() < 0.005) {
+      this.vx = randomBtw(-this.speed, this.speed);
+      this.vy = randomBtw(-this.speed, this.speed);
+    }
 
-    this.head.x += this.walkingSpeed;
-    this.head.y += this.walkingSpeed;
+    this.x += this.vx;
+    this.y += this.vy;
 
-    this.faceText.x += this.walkingSpeed;
-    this.faceText.y += this.walkingSpeed;
+    // Update body part positions that are relative to this.x and this.y
+    this.updateBodyPartPositions();
+  }
 
-    this.messageText.x += this.walkingSpeed;
-    this.messageText.y += this.walkingSpeed;
+  // Update body part positions that are relative to this.x and this.y
+  updateBodyPartPositions() {
+    this.head.x = this.x + this.head.offset.x;
+    this.head.y = this.y + this.head.offset.y;
+
+    this.faceText.x = this.x + this.faceText.offset.x;
+    this.faceText.y = this.y + this.faceText.offset.y;
+
+    this.messageText.x = this.x + this.messageText.offset.x;
+    this.messageText.y = this.y + this.messageText.offset.y;
   }
 
   // Update face when clicked on Send button
@@ -133,6 +195,12 @@ class Npc {
       this.messageText.text = npcResponseMessage;
     }
   }
+}
+
+// Return random value between min and max
+function randomBtw(min, max) {
+  let randomValue = min + Math.random() * (max - min);
+  return randomValue;
 }
 
 // Create many npcs
@@ -161,7 +229,7 @@ app.ticker.add(gameLoop);
 function gameLoop(delta) {
   for (let i = 0; i < npcs.length; i++) {
     let npc = npcs[i];
-    npc.walk();
+    npc.loop();
   }
 
   // iterate through the dudes and update the positions
@@ -427,35 +495,6 @@ function composeAMessage(emojiArraySet) {
     npc.updateResponseMessage();
   }
 }
-
-/*------------------------
-Testing separate body parts of NPC
-https://www.youtube.com/watch?v=L1E_7FoTrik&ab_channel=TheTechTrain
--------------------------*/
-
-window.onload = function () {
-  // Create file name for test head
-  let testHead = new Image();
-  // Set number of head files (here it's 3)
-  let testHeadNum = Math.floor(Math.random() * 3);
-  let testHeadName = "assets/images/head" + testHeadNum + ".png";
-  testHead.src = testHeadName;
-
-  testHead.onload = function () {
-    buildTestBody();
-  };
-
-  function buildTestBody() {
-    // Create canvas
-    let canvas = document.getElementById("canvas");
-    let ctx = canvas.getContext("2d");
-    canvas.width = 400;
-    canvas.height = 400;
-
-    // Place image in center: draw head
-    ctx.drawImage(testHead, (400 - testHead.width) / 2, 50);
-  }
-};
 
 /*------------------------
 p5 below - unused for now
