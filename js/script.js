@@ -83,17 +83,19 @@ class Npc {
     app.stage.addChild(this.messageText);
   }
 
-  // Head is clicked
+  // Head is clicked and no keyboard is active
   clicked() {
-    // head temporarily scales up to check that click is working
-    this.head.scale.x *= 1.05;
-    this.head.scale.y *= 1.05;
+    if (!keyboardActive) {
+      // head temporarily scales up to check that click is working
+      this.head.scale.x *= 1.05;
+      this.head.scale.y *= 1.05;
 
-    // give ability to talk with keyboard
-    this.talking = true;
+      // give ability to talk with keyboard
+      this.talking = true;
 
-    // keyboard pops into view
-    keyboardIsActive();
+      // keyboard pops into view
+      keyboardIsActive();
+    }
   }
 
   // Handles walking
