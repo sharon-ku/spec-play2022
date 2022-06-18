@@ -20,11 +20,22 @@ const NUM_NPCS = 3;
 // Source: https://www.youtube.com/watch?v=NG5qxx9Ij6Q&ab_channel=DowerChin
 class Npc {
   constructor({ x, y }) {
+    // set to true if currently talking to this npc
+    this.talking = false;
+
     this.head = new PIXI.Graphics();
     this.head.beginFill(0x5cafe2);
     this.head.drawCircle(0, 0, 80);
     this.head.x = x;
     this.head.y = y;
+
+    // Opt-in to interactivity
+    this.head.interactive = true;
+    // Shows hand cursor
+    this.head.buttonMode = true;
+    // Handles mouse and touch click
+    // reference: https://pixijs.io/examples/#/interaction/click.js
+    this.head.on("pointerdown", this.onClick);
 
     app.stage.addChild(this.head);
 
@@ -68,6 +79,18 @@ class Npc {
     app.stage.addChild(this.messageText);
   }
 
+  // Head is clicked
+  onClick() {
+    // head temporarily scales up to check that click is working
+    this.scale.x *= 1.25;
+    this.scale.y *= 1.25;
+
+    // give ability to talk with keyboard
+    this.talking = true;
+    console.log(this.talking);
+  }
+
+  // Handles walking
   walk() {
     this.walkingSpeed = 0.02;
 
@@ -89,8 +112,8 @@ createManyNpcs();
 function createManyNpcs() {
   for (let i = 0; i < NUM_NPCS; i++) {
     let npcProperties = {
-      x: Math.random() * app.renderer.width,
-      y: Math.random() * app.renderer.height,
+      x: Math.random() * app.screen.width,
+      y: Math.random() * app.screen.height,
     };
 
     let npc = new Npc(npcProperties);
