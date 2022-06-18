@@ -150,6 +150,9 @@ canvas {
 
   /* width: 700px; */
   /* justify-content: space-between; */
+
+  /* exit-section position is relative to parent emoji-keyboard */
+  position: relative;
 }
 
 /* Emoji character inside the keyboard */
@@ -164,6 +167,22 @@ canvas {
 .emoji-character:hover {
   cursor: pointer;
   /* filter: hue-rotate(80deg); */
+}
+
+/* Exit container on top right of keyboard */
+#exit-container {
+  /* position is relatie to parent emoji-keyboard */
+  position: absolute;
+  right: -10px;
+  bottom: 35px;
+}
+
+#exit-button {
+  width: 70px;
+  height: 70px;
+  text-align: center;
+
+  font-size: 3rem;
 }
 
 #send-button {
