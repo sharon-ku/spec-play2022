@@ -7,6 +7,10 @@ Description will go here
 
 "use strict";
 
+// Keyboard only becomes active when clicked on an npc to talk to
+let keyboardActive = false;
+keyboardIsInactive();
+
 // For nice resolution on circle, source: https://stackoverflow.com/questions/41932258/how-do-i-antialias-graphics-circle-in-pixijs
 let app = new PIXI.Application({ width: 640, height: 360, antialias: true });
 document.body.appendChild(app.view);
@@ -35,7 +39,7 @@ class Npc {
     this.head.buttonMode = true;
     // Handles mouse and touch click
     // reference: https://pixijs.io/examples/#/interaction/click.js
-    this.head.on("pointerdown", this.onClick);
+    this.head.on("pointerdown", this.clicked.bind(this));
 
     app.stage.addChild(this.head);
 
@@ -80,14 +84,16 @@ class Npc {
   }
 
   // Head is clicked
-  onClick() {
+  clicked() {
     // head temporarily scales up to check that click is working
-    this.scale.x *= 1.25;
-    this.scale.y *= 1.25;
+    this.head.scale.x *= 1.25;
+    this.head.scale.y *= 1.25;
 
     // give ability to talk with keyboard
     this.talking = true;
-    console.log(this.talking);
+
+    // keyboard pops into view
+    keyboardIsActive();
   }
 
   // Handles walking
@@ -102,6 +108,20 @@ class Npc {
 
     this.messageText.x += this.walkingSpeed;
     this.messageText.y += this.walkingSpeed;
+  }
+
+  // Update face when clicked on Send button
+  updateFace() {
+    if (this.talking) {
+      this.faceText.text = nextEmojiToDisplay;
+    }
+  }
+
+  // Update response message when clicked on Send button
+  updateResponseMessage() {
+    if (this.talking) {
+      this.messageText.text = npcResponseMessage;
+    }
   }
 }
 
@@ -155,6 +175,16 @@ function gameLoop(delta) {
   //         dude.y -= dudeBounds.height;
   //     }
   // }
+}
+
+function keyboardIsActive() {
+  keyboardActive = true;
+  $(`#keyboard-section`).show();
+}
+
+function keyboardIsInactive() {
+  keyboardActive = false;
+  $(`#keyboard-section`).hide();
 }
 
 // let keyboardEmojis = `🎑🌄🥻🙉🍅🥽🧶👮‍♀️🙊🤞👩‍👧‍👦⚽️👠🧐🧥💂👩‍🦱🌌🐣⌚️👙😉🐗😞🤛🐨🩰🖕👩‍👦👎😒😕😊🌉🚗👉👐🐽🥳🥑👕🐌🏉🩳🕍🚄🚌🍑⛪️✍️🧵🧳🧑😔🐯🏑`;
@@ -281,6 +311,19 @@ $(document).keydown(function (e) {
   }
 });
 
+// After clicking on x button
+$(`#exit-button`).click(function () {
+  console.log(`exit clicked`);
+  // Hide the keyboard
+  keyboardIsInactive();
+
+  // Stop all conversations
+  for (let i = 0; i < npcs.length; i++) {
+    let npc = npcs[i];
+    npc.talking = false;
+  }
+});
+
 // After clicking on Send button
 $(`#send-button`).click(function () {
   // Remove message in input-bubble
@@ -335,7 +378,8 @@ function updateNpcFace(reactionArray) {
   // Update emoji face in Pixi
   for (let i = 0; i < npcs.length; i++) {
     let npc = npcs[i];
-    npc.faceText.text = nextEmojiToDisplay;
+
+    npc.updateFace();
   }
 }
 
@@ -363,7 +407,7 @@ function composeAMessage(emojiArraySet) {
   // Update response message in Pixi
   for (let i = 0; i < npcs.length; i++) {
     let npc = npcs[i];
-    npc.messageText.text = npcResponseMessage;
+    npc.updateResponseMessage();
   }
 }
 
