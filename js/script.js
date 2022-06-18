@@ -12,7 +12,12 @@ let keyboardActive = false;
 keyboardIsInactive();
 
 // For nice resolution on circle, source: https://stackoverflow.com/questions/41932258/how-do-i-antialias-graphics-circle-in-pixijs
-let app = new PIXI.Application({ width: 640, height: 360, antialias: true });
+let app = new PIXI.Application({
+  transparent: false,
+  width: 640,
+  height: 360,
+  antialias: true,
+});
 document.body.appendChild(app.view);
 
 // store all npcs in here
@@ -83,9 +88,12 @@ class Npc {
     app.stage.addChild(this.messageText);
   }
 
-  // Head is clicked and no keyboard is active
+  // Head is clicked and we're not already talking to this character
   clicked() {
-    if (!keyboardActive) {
+    // If we're not currently talking to this npc:
+    if (!this.talking) {
+      stopAllConversations();
+
       // head temporarily scales up to check that click is working
       this.head.scale.x *= 1.05;
       this.head.scale.y *= 1.05;
@@ -145,11 +153,11 @@ function createManyNpcs() {
   // app.stage.addChild(npc);
 }
 
-// Similar to update()
+// Similar to draw()
 // source: https://pixijs.io/examples/#/demos-basic/blendmodes.js
 app.ticker.add(gameLoop);
 
-// Similar to update()
+// Similar to draw()
 function gameLoop(delta) {
   for (let i = 0; i < npcs.length; i++) {
     let npc = npcs[i];
@@ -320,13 +328,18 @@ $(`#exit-button`).click(function () {
   keyboardIsInactive();
 
   // Stop all conversations
+  stopAllConversations();
+});
+
+// Stop all current conversations
+function stopAllConversations() {
   for (let i = 0; i < npcs.length; i++) {
     let npc = npcs[i];
     npc.talking = false;
     // Empty out response message
     npc.messageText.text = ``;
   }
-});
+}
 
 // After clicking on Send button
 $(`#send-button`).click(function () {
