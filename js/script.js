@@ -341,7 +341,9 @@ let splitEmojis = splitter.splitGraphemes(keyboardEmojis);
 // Append emojis to the emoji keyboard
 for (let i = 0; i < splitEmojis.length; i++) {
   $(`#emoji-keyboard`).append(
-    `<div class="emoji-character">${splitEmojis[i]}</div>`
+    `<div class="emoji-key">
+      <div class="emoji-character">${splitEmojis[i]}</div>
+    </div>`
   );
 }
 
