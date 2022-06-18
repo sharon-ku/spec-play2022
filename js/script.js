@@ -15,8 +15,8 @@ keyboardIsInactive();
 // For nice resolution on circle, source: https://stackoverflow.com/questions/41932258/how-do-i-antialias-graphics-circle-in-pixijs
 let app = new PIXI.Application({
   transparent: false,
-  width: 640,
-  height: 360,
+  width: 1000, //640
+  height: 360, //360
   antialias: true,
 });
 document.body.appendChild(app.view);
@@ -145,13 +145,14 @@ class Npc {
 
   // Constrain npc's movement along x and y directions
   constrainMovement() {
+    let canvasPadding = 100;
     // If npc exceeds left or right of canvas, stop movement in s direction
-    if (this.x < 50 || this.x > app.screen.width - 50) {
+    if (this.x < canvasPadding || this.x > app.screen.width - canvasPadding) {
       this.vx = 0;
     }
 
     // If npc exceeds top or bottom of canvas, stop movement in y direction
-    if (this.y < 50 || this.y > app.screen.height - 50) {
+    if (this.y < canvasPadding || this.y > app.screen.height - canvasPadding) {
       this.vy = 0;
     }
   }
