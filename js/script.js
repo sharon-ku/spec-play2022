@@ -11,8 +11,10 @@ Description will go here
 let app = new PIXI.Application({ width: 640, height: 360, antialias: true });
 document.body.appendChild(app.view);
 
-// one singular npc
-let npc = undefined;
+// store all npcs in here
+let npcs = [];
+// number of npcs
+const NUM_NPCS = 3;
 
 // Create a class for an NPC
 // Source: https://www.youtube.com/watch?v=NG5qxx9Ij6Q&ab_channel=DowerChin
@@ -29,6 +31,19 @@ class Npc {
     this.faceStyle = new PIXI.TextStyle({
       fontFamily: "Arial",
       fontSize: 100,
+      //   // fontStyle: "italic",
+      //   // fontWeight: "bold",
+      //   // fill: ["#ffffff", "#00ff99"], // gradient
+      //   // stroke: "#4a1850",
+      //   // strokeThickness: 5,
+      //   // dropShadow: true,
+      //   // dropShadowColor: "#000000",
+      //   // dropShadowBlur: 4,
+      //   // dropShadowAngle: Math.PI / 6,
+      //   // dropShadowDistance: 6,
+      //   // wordWrap: true,
+      //   // wordWrapWidth: 440,
+      //   // lineJoin: "round",
     });
 
     this.faceText = new PIXI.Text("🙊", this.faceStyle);
@@ -54,76 +69,36 @@ class Npc {
   }
 
   walk() {
-    this.head.x += 0.05;
-    this.head.y += 0.05;
+    this.walkingSpeed = 0.02;
 
-    this.faceText.x += 0.05;
-    this.faceText.y += 0.05;
+    this.head.x += this.walkingSpeed;
+    this.head.y += this.walkingSpeed;
 
-    this.messageText.x += 0.05;
-    this.messageText.y += 0.05;
+    this.faceText.x += this.walkingSpeed;
+    this.faceText.y += this.walkingSpeed;
+
+    this.messageText.x += this.walkingSpeed;
+    this.messageText.y += this.walkingSpeed;
   }
 }
 
-createNpc();
+// Create many npcs
+createManyNpcs();
 
-function createNpc() {
-  let npcProperties = {
-    x: Math.random() * app.renderer.width,
-    y: Math.random() * app.renderer.height,
-  };
+// Create many npcs
+function createManyNpcs() {
+  for (let i = 0; i < NUM_NPCS; i++) {
+    let npcProperties = {
+      x: Math.random() * app.renderer.width,
+      y: Math.random() * app.renderer.height,
+    };
 
-  npc = new Npc(npcProperties);
+    let npc = new Npc(npcProperties);
+    npcs.push(npc);
+  }
 
   // app.stage.addChild(npc);
 }
-
-// let head = new PIXI.Graphics();
-// head.beginFill(0x5cafe2);
-// head.drawCircle(0, 0, 80);
-// head.x = 320;
-// head.y = 180;
-//
-// app.stage.addChild(head);
-//
-// const faceStyle = new PIXI.TextStyle({
-//   fontFamily: "Arial",
-//   fontSize: 100,
-//   // fontStyle: "italic",
-//   // fontWeight: "bold",
-//   // fill: ["#ffffff", "#00ff99"], // gradient
-//   // stroke: "#4a1850",
-//   // strokeThickness: 5,
-//   // dropShadow: true,
-//   // dropShadowColor: "#000000",
-//   // dropShadowBlur: 4,
-//   // dropShadowAngle: Math.PI / 6,
-//   // dropShadowDistance: 6,
-//   // wordWrap: true,
-//   // wordWrapWidth: 440,
-//   // lineJoin: "round",
-// });
-//
-// let faceText = new PIXI.Text("🙊", faceStyle);
-// faceText.x = 320;
-// faceText.y = 180;
-// // center text
-// faceText.anchor.set(0.5);
-//
-// app.stage.addChild(faceText);
-
-// // NPC response message
-// let messageStyle = new PIXI.TextStyle({
-//   fontFamily: "Arial",
-//   fontSize: 40,
-// });
-// let messageText = new PIXI.Text("🙊", messageStyle);
-// messageText.x = 320 + 110;
-// messageText.y = 180;
-// // center text
-// messageText.anchor.set(0, 0.5);
-//
-// app.stage.addChild(messageText);
 
 // Similar to update()
 // source: https://pixijs.io/examples/#/demos-basic/blendmodes.js
@@ -131,15 +106,11 @@ app.ticker.add(gameLoop);
 
 // Similar to update()
 function gameLoop(delta) {
-  npc.walk();
-  // head.x += 0.05;
-  // head.y += 0.05;
-  //
-  // faceText.x += 0.05;
-  // faceText.y += 0.05;
-  //
-  // messageText.x += 0.05;
-  // messageText.y += 0.05;
+  for (let i = 0; i < npcs.length; i++) {
+    let npc = npcs[i];
+    npc.walk();
+  }
+
   // iterate through the dudes and update the positions
   // for (let i = 0; i < dudeArray.length; i++) {
   //     const dude = dudeArray[i];
@@ -339,7 +310,10 @@ function updateNpcFace(reactionArray) {
   $(`#emoji-face`).text(nextEmojiToDisplay);
 
   // Update emoji face in Pixi
-  npc.faceText.text = nextEmojiToDisplay;
+  for (let i = 0; i < npcs.length; i++) {
+    let npc = npcs[i];
+    npc.faceText.text = nextEmojiToDisplay;
+  }
 }
 
 // Compose a response message
@@ -364,7 +338,10 @@ function composeAMessage(emojiArraySet) {
   $(`#npc-response-message`).text(npcResponseMessage);
 
   // Update response message in Pixi
-  npc.messageText.text = npcResponseMessage;
+  for (let i = 0; i < npcs.length; i++) {
+    let npc = npcs[i];
+    npc.messageText.text = npcResponseMessage;
+  }
 }
 
 /*------------------------
