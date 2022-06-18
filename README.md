@@ -10,7 +10,7 @@ What are you looking for?
 - The actual game? --> https://sharon-ku.github.io/spec-play2022/
   - note that the game is just a seedling at the moment 🌱, but you'll get to see it blossom real soon 🌼 (patience, my friend)
 
-In this game, I want to explore a world where communications are dominated by emojis and emojis _only_. They are the universal language and people must pay to access more "words" to speak with.
+In this game, I want to explore a world where communications are dominated by emojis. Emojis are the universal language that emerged as a combined result of language wars, lack of accessibility for literacy, and growing demand for translators.
 
 ---
 

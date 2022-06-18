@@ -11,65 +11,135 @@ Description will go here
 let app = new PIXI.Application({ width: 640, height: 360, antialias: true });
 document.body.appendChild(app.view);
 
-let circle = new PIXI.Graphics();
-circle.beginFill(0x5cafe2);
-circle.drawCircle(0, 0, 80);
-circle.x = 320;
-circle.y = 180;
+// one singular npc
+let npc = undefined;
 
-app.stage.addChild(circle);
+// Create a class for an NPC
+// Source: https://www.youtube.com/watch?v=NG5qxx9Ij6Q&ab_channel=DowerChin
+class Npc {
+  constructor({ x, y }) {
+    this.head = new PIXI.Graphics();
+    this.head.beginFill(0x5cafe2);
+    this.head.drawCircle(0, 0, 80);
+    this.head.x = x;
+    this.head.y = y;
 
-const faceStyle = new PIXI.TextStyle({
-  fontFamily: "Arial",
-  fontSize: 100,
-  // fontStyle: "italic",
-  // fontWeight: "bold",
-  // fill: ["#ffffff", "#00ff99"], // gradient
-  // stroke: "#4a1850",
-  // strokeThickness: 5,
-  // dropShadow: true,
-  // dropShadowColor: "#000000",
-  // dropShadowBlur: 4,
-  // dropShadowAngle: Math.PI / 6,
-  // dropShadowDistance: 6,
-  // wordWrap: true,
-  // wordWrapWidth: 440,
-  // lineJoin: "round",
-});
+    app.stage.addChild(this.head);
 
-let faceText = new PIXI.Text("🙊", faceStyle);
-faceText.x = 320;
-faceText.y = 180;
-// center text
-faceText.anchor.set(0.5);
+    this.faceStyle = new PIXI.TextStyle({
+      fontFamily: "Arial",
+      fontSize: 100,
+    });
 
-app.stage.addChild(faceText);
+    this.faceText = new PIXI.Text("🙊", this.faceStyle);
+    this.faceText.x = this.head.x;
+    this.faceText.y = this.head.y;
+    // center text
+    this.faceText.anchor.set(0.5);
 
-// NPC response message
-let messageStyle = new PIXI.TextStyle({
-  fontFamily: "Arial",
-  fontSize: 40,
-});
-let messageText = new PIXI.Text("🙊", messageStyle);
-messageText.x = 320 + 110;
-messageText.y = 180;
-// center text
-messageText.anchor.set(0, 0.5);
+    app.stage.addChild(this.faceText);
 
-app.stage.addChild(messageText);
+    // NPC response message
+    this.messageStyle = new PIXI.TextStyle({
+      fontFamily: "Arial",
+      fontSize: 40,
+    });
+    this.messageText = new PIXI.Text("🙊", this.messageStyle);
+    this.messageText.x = this.head.x + 110;
+    this.messageText.y = this.head.y;
+    // center text
+    this.messageText.anchor.set(0, 0.5);
+
+    app.stage.addChild(this.messageText);
+  }
+
+  walk() {
+    this.head.x += 0.05;
+    this.head.y += 0.05;
+
+    this.faceText.x += 0.05;
+    this.faceText.y += 0.05;
+
+    this.messageText.x += 0.05;
+    this.messageText.y += 0.05;
+  }
+}
+
+createNpc();
+
+function createNpc() {
+  let npcProperties = {
+    x: Math.random() * app.renderer.width,
+    y: Math.random() * app.renderer.height,
+  };
+
+  npc = new Npc(npcProperties);
+
+  // app.stage.addChild(npc);
+}
+
+// let head = new PIXI.Graphics();
+// head.beginFill(0x5cafe2);
+// head.drawCircle(0, 0, 80);
+// head.x = 320;
+// head.y = 180;
+//
+// app.stage.addChild(head);
+//
+// const faceStyle = new PIXI.TextStyle({
+//   fontFamily: "Arial",
+//   fontSize: 100,
+//   // fontStyle: "italic",
+//   // fontWeight: "bold",
+//   // fill: ["#ffffff", "#00ff99"], // gradient
+//   // stroke: "#4a1850",
+//   // strokeThickness: 5,
+//   // dropShadow: true,
+//   // dropShadowColor: "#000000",
+//   // dropShadowBlur: 4,
+//   // dropShadowAngle: Math.PI / 6,
+//   // dropShadowDistance: 6,
+//   // wordWrap: true,
+//   // wordWrapWidth: 440,
+//   // lineJoin: "round",
+// });
+//
+// let faceText = new PIXI.Text("🙊", faceStyle);
+// faceText.x = 320;
+// faceText.y = 180;
+// // center text
+// faceText.anchor.set(0.5);
+//
+// app.stage.addChild(faceText);
+
+// // NPC response message
+// let messageStyle = new PIXI.TextStyle({
+//   fontFamily: "Arial",
+//   fontSize: 40,
+// });
+// let messageText = new PIXI.Text("🙊", messageStyle);
+// messageText.x = 320 + 110;
+// messageText.y = 180;
+// // center text
+// messageText.anchor.set(0, 0.5);
+//
+// app.stage.addChild(messageText);
 
 // Similar to update()
 // source: https://pixijs.io/examples/#/demos-basic/blendmodes.js
-app.ticker.add(() => {
-  circle.x += 0.05;
-  circle.y += 0.05;
+app.ticker.add(gameLoop);
 
-  faceText.x += 0.05;
-  faceText.y += 0.05;
-
-  messageText.x += 0.05;
-  messageText.y += 0.05;
-
+// Similar to update()
+function gameLoop(delta) {
+  npc.walk();
+  // head.x += 0.05;
+  // head.y += 0.05;
+  //
+  // faceText.x += 0.05;
+  // faceText.y += 0.05;
+  //
+  // messageText.x += 0.05;
+  // messageText.y += 0.05;
   // iterate through the dudes and update the positions
   // for (let i = 0; i < dudeArray.length; i++) {
   //     const dude = dudeArray[i];
@@ -91,7 +161,7 @@ app.ticker.add(() => {
   //         dude.y -= dudeBounds.height;
   //     }
   // }
-});
+}
 
 // let keyboardEmojis = `🎑🌄🥻🙉🍅🥽🧶👮‍♀️🙊🤞👩‍👧‍👦⚽️👠🧐🧥💂👩‍🦱🌌🐣⌚️👙😉🐗😞🤛🐨🩰🖕👩‍👦👎😒😕😊🌉🚗👉👐🐽🥳🥑👕🐌🏉🩳🕍🚄🚌🍑⛪️✍️🧵🧳🧑😔🐯🏑`;
 let keyboardEmojis = `🎑🌄🥻🙉🍅🥽🧶👮‍♀️🙊🤞👩‍👧‍👦⚽️👠🧐🧥💂👩‍🦱🌌🐣⌚️👙😉🐗😞🤛🐨🩰🖕👩‍👦👎😒`;
@@ -269,7 +339,7 @@ function updateNpcFace(reactionArray) {
   $(`#emoji-face`).text(nextEmojiToDisplay);
 
   // Update emoji face in Pixi
-  faceText.text = nextEmojiToDisplay;
+  npc.faceText.text = nextEmojiToDisplay;
 }
 
 // Compose a response message
@@ -294,7 +364,7 @@ function composeAMessage(emojiArraySet) {
   $(`#npc-response-message`).text(npcResponseMessage);
 
   // Update response message in Pixi
-  messageText.text = npcResponseMessage;
+  npc.messageText.text = npcResponseMessage;
 }
 
 /*------------------------
