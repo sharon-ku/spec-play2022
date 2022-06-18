@@ -86,8 +86,8 @@ class Npc {
   // Head is clicked
   clicked() {
     // head temporarily scales up to check that click is working
-    this.head.scale.x *= 1.25;
-    this.head.scale.y *= 1.25;
+    this.head.scale.x *= 1.05;
+    this.head.scale.y *= 1.05;
 
     // give ability to talk with keyboard
     this.talking = true;
@@ -321,6 +321,8 @@ $(`#exit-button`).click(function () {
   for (let i = 0; i < npcs.length; i++) {
     let npc = npcs[i];
     npc.talking = false;
+    // Empty out response message
+    npc.messageText.text = ``;
   }
 });
 
