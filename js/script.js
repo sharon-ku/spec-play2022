@@ -41,6 +41,13 @@ class Npc {
     this.vx = 0;
     this.vy = 0;
 
+    // Used to set facing direction
+    // By default, scale is (1,1)
+    this.scale = {
+      x: 1,
+      y: 1,
+    };
+
     // Possible NPC tint colors
     // Tint source: https://scottmcdonnell.github.io/pixi-examples/index.html?s=demos&f=tinting.js&title=Tinting
     this.pink = `FF80D4`;
@@ -74,7 +81,6 @@ class Npc {
       x: 0,
       y: 32,
     };
-
     // center the sprite's anchor point
     this.body.anchor.set(0.5);
 
@@ -216,6 +222,9 @@ class Npc {
     if (Math.random() < 0.005) {
       this.vx = randomBtw(-this.speed, this.speed);
       this.vy = randomBtw(-this.speed, this.speed);
+
+      // Update facing direction
+      this.updateFacingDirection();
     }
 
     this.x += this.vx;
@@ -238,6 +247,28 @@ class Npc {
 
     this.messageText.x = this.x + this.messageText.offset.x;
     this.messageText.y = this.y + this.messageText.offset.y;
+  }
+
+  // Flip the emoji when it's moving left or right
+  updateFacingDirection() {
+    // If walking to the right:
+    if (this.vx >= 0) {
+      // face right
+      this.scale.x = 1;
+      // put face emoji closer to right
+      this.faceText.offset.x = 4;
+    }
+    // Else if walking to the left:
+    else if (this.vx < 0) {
+      // face left
+      this.scale.x = -1;
+      // put face emoji closer to left
+      this.faceText.offset.x = -4;
+    }
+
+    // Set scale to body and emoji face text
+    this.body.scale.x = this.scale.x;
+    this.faceText.scale.x = this.scale.x;
   }
 
   // Update face when clicked on Send button
