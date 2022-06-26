@@ -24,7 +24,7 @@ document.body.appendChild(app.view);
 // store all npcs in here
 let npcs = [];
 // number of npcs
-const NUM_NPCS = 3;
+const NUM_NPCS = 8;
 
 // Create a class for an NPC
 // Source: https://www.youtube.com/watch?v=NG5qxx9Ij6Q&ab_channel=DowerChin
@@ -33,7 +33,7 @@ class Npc {
     // set to true if currently talking to this npc
     this.talking = false;
 
-    // Body position: all body parts are offset from these coordinates
+    // Npc position: all body parts are offset from these coordinates
     this.x = x;
     this.y = y;
 
@@ -41,9 +41,49 @@ class Npc {
     this.vx = 0;
     this.vy = 0;
 
+    // Possible NPC tint colors
+    // Tint source: https://scottmcdonnell.github.io/pixi-examples/index.html?s=demos&f=tinting.js&title=Tinting
+    this.pink = `FF80D4`;
+    this.green = `BAFF9A`;
+    this.red = `FF6B00`;
+    this.blue = `5CAFE2`;
+    this.yellow = `FFC83D`;
+    this.purple = `B5AEFF`;
+
+    // put the colors in an array
+    this.possibleColors = [];
+    this.possibleColors.push(
+      this.pink,
+      this.green,
+      this.red,
+      this.blue,
+      this.yellow,
+      this.purple
+    );
+    // randomly choose a tint color; hexcodes are prefixed by `0x`
+    this.tintColor = `0x` + this.getRandomElementFrom(this.possibleColors);
+    console.log(this.tintColor);
+
+    // create a new body Sprite from an image path.
+    this.body = PIXI.Sprite.from("../assets/images/npc-body.png");
+    // body's position
+    this.body.x = undefined;
+    this.body.y = undefined;
+    // offset from this.x and this.y
+    this.body.offset = {
+      x: 0,
+      y: 32,
+    };
+
+    // center the sprite's anchor point
+    this.body.anchor.set(0.5);
+
+    app.stage.addChild(this.body);
+
     this.head = new PIXI.Graphics();
-    this.head.beginFill(0x5cafe2);
-    this.head.drawCircle(0, 0, 80);
+    this.head.beginFill(0xffffff); //0x5cafe2
+    this.head.radius = 40; //80
+    this.head.drawCircle(0, 0, this.head.radius);
     this.head.x = undefined;
     this.head.y = undefined;
     // offset from this.x and this.y
@@ -64,7 +104,7 @@ class Npc {
 
     this.faceStyle = new PIXI.TextStyle({
       fontFamily: "Arial",
-      fontSize: 100,
+      fontSize: 50, //100
       //   // fontStyle: "italic",
       //   // fontWeight: "bold",
       //   // fill: ["#ffffff", "#00ff99"], // gradient
@@ -85,7 +125,7 @@ class Npc {
     this.faceText.y = undefined;
     // offset from this.x and this.y
     this.faceText.offset = {
-      x: 0,
+      x: 3,
       y: 0,
     };
 
@@ -104,16 +144,30 @@ class Npc {
     this.messageText.y = undefined;
     // offset from this.x and this.y
     this.messageText.offset = {
-      x: 110,
+      x: 50, //110
       y: 0,
     };
     // center text
     this.messageText.anchor.set(0, 0.5);
 
+    // Change head and body color of NPC
+    this.changeTintColor();
+
     // Update body part positions that are relative to this.x and this.y
     this.updateBodyPartPositions();
 
     app.stage.addChild(this.messageText);
+  }
+
+  // Get a random element from an array
+  getRandomElementFrom(arrayName) {
+    return arrayName[Math.floor(Math.random() * arrayName.length)];
+  }
+
+  // Change head and body color of NPC
+  changeTintColor() {
+    this.head.tint = this.tintColor;
+    this.body.tint = this.tintColor;
   }
 
   // Head is clicked and we're not already talking to this character
@@ -173,6 +227,9 @@ class Npc {
 
   // Update body part positions that are relative to this.x and this.y
   updateBodyPartPositions() {
+    this.body.x = this.x + this.body.offset.x;
+    this.body.y = this.y + this.body.offset.y;
+
     this.head.x = this.x + this.head.offset.x;
     this.head.y = this.y + this.head.offset.y;
 
@@ -421,8 +478,7 @@ $(`#send-button`).click(function () {
   $(`#npc-response-message`).empty();
 
   // Randomly select the response type of NPC
-  let randomIndex = Math.floor(Math.random() * emojiCategories.length);
-  let responseType = emojiCategories[randomIndex];
+  let responseType = random(emojiCategories);
   console.log(responseType);
 
   // Update facial and verbal reaction based on the response type
