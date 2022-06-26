@@ -84,6 +84,9 @@ class Npc {
     // center the sprite's anchor point
     this.body.anchor.set(0.5);
 
+    // Make the body clickable to start keyboard communication
+    this.clickToInteract(this.body);
+
     app.stage.addChild(this.body);
 
     this.head = new PIXI.Graphics();
@@ -98,13 +101,8 @@ class Npc {
       y: 0,
     };
 
-    // Opt-in to interactivity
-    this.head.interactive = true;
-    // Shows hand cursor
-    this.head.buttonMode = true;
-    // Handles mouse and touch click
-    // reference: https://pixijs.io/examples/#/interaction/click.js
-    this.head.on("pointerdown", this.clicked.bind(this));
+    // Make the head clickable to start keyboard communication
+    this.clickToInteract(this.head);
 
     app.stage.addChild(this.head);
 
@@ -165,6 +163,17 @@ class Npc {
     app.stage.addChild(this.messageText);
   }
 
+  // Make a body part clickable to start keyboard communication
+  clickToInteract(bodyPart) {
+    // Opt-in to interactivity
+    bodyPart.interactive = true;
+    // Shows hand cursor
+    bodyPart.buttonMode = true;
+    // Handles mouse and touch click
+    // reference: https://pixijs.io/examples/#/interaction/click.js
+    bodyPart.on("pointerdown", this.clicked.bind(this));
+  }
+
   // Get a random element from an array
   getRandomElementFrom(arrayName) {
     return arrayName[Math.floor(Math.random() * arrayName.length)];
@@ -183,8 +192,8 @@ class Npc {
       stopAllConversations();
 
       // head temporarily scales up to check that click is working
-      this.head.scale.x *= 1.05;
-      this.head.scale.y *= 1.05;
+      this.head.scale.x *= 1.1; //1.05
+      this.head.scale.y *= 1.1; //1.05
 
       // give ability to talk with keyboard
       this.talking = true;
