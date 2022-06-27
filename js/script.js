@@ -72,7 +72,7 @@ class Npc {
     console.log(this.tintColor);
 
     // create a new body Sprite from an image path.
-    this.body = PIXI.Sprite.from("../assets/images/npc-body.png");
+    this.body = PIXI.Sprite.from("assets/images/npc-body.png");
     // body's position
     this.body.x = undefined;
     this.body.y = undefined;
