@@ -143,9 +143,15 @@ class Npc {
     bodyPart.interactive = true;
     // Shows hand cursor
     bodyPart.buttonMode = true;
-    // Handles mouse and touch click
+    // Handles mouse and touch click:
+    // When click, cue clicked() function
+    // When hovering over Npc, scale it up
+    // When leaving hover over Npc, scale down to normal
     // reference: https://pixijs.io/examples/#/interaction/click.js
-    bodyPart.on("pointerdown", this.clicked.bind(this));
+    bodyPart
+      .on("pointerdown", this.clicked.bind(this))
+      .on("pointerover", this.hover.bind(this))
+      .on("pointerout", this.onHoverOut.bind(this));
   }
 
   // Get a random element from an array
@@ -168,15 +174,39 @@ class Npc {
     this.shakeSpeed += 0.1;
   }
 
+  // When hovering over body, scale up
+  hover() {
+    let currentScale = 1.1;
+    this.updateNpcScale(currentScale);
+  }
+
+  // When leave hovering over body, scale down to normal
+  onHoverOut() {
+    let currentScale = 1;
+    this.updateNpcScale(currentScale);
+  }
+
+  // Set Npc scale based on currentScale;
+  updateNpcScale(currentScale) {
+    this.head.scale.x = currentScale;
+    this.head.scale.y = currentScale;
+
+    this.body.scale.x = currentScale;
+    this.body.scale.y = currentScale;
+
+    // Update facing direction
+    this.updateFacingDirection();
+  }
+
   // Head is clicked and we're not already talking to this character
   clicked() {
     // If we're not currently talking to this npc:
     if (!this.talking) {
       stopAllConversations();
 
-      // head temporarily scales up to check that click is working
-      this.head.scale.x *= 1.1; //1.05
-      this.head.scale.y *= 1.1; //1.05
+      // // head temporarily scales up to check that click is working
+      // this.head.scale.x *= 1.1; //1.05
+      // this.head.scale.y *= 1.1; //1.05
 
       // give ability to talk with keyboard
       this.talking = true;
