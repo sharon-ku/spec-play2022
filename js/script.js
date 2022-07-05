@@ -95,7 +95,16 @@ function keyboardIsInactive() {
 }
 
 // let keyboardEmojis = `🎑🌄🥻🙉🍅🥽🧶👮‍♀️🙊🤞👩‍👧‍👦⚽️👠🧐🧥💂👩‍🦱🌌🐣⌚️👙😉🐗😞🤛🐨🩰🖕👩‍👦👎😒😕😊🌉🚗👉👐🐽🥳🥑👕🐌🏉🩳🕍🚄🚌🍑⛪️✍️🧵🧳🧑😔🐯🏑`;
-let keyboardEmojis = `🎑🌄🥻🙉🍅🥽🧶👮‍♀️🙊🤞👩‍👧‍👦⚽️👠🧐🧥💂👩‍🦱🌌🐣⌚️👙😉🐗😞🤛🐨🩰🖕👩‍👦👎😒`;
+// let keyboardEmojis = `🎑🌄🥻🙉🍅🥽🧶👮‍♀️🙊🤞👩‍👧‍👦⚽️👠🧐🧥💂👩‍🦱🌌🐣⌚️👙😉🐗😞🤛🐨🩰🖕👩‍👦👎😒`;
+// Keyboard set 1
+let keyboardFaceEmojis = `🙂😄😁🥳😋😛😏😘😍😚😲🤯😧😨😤😡😠🤬😴🥱😅🤨😒🙄🤔`;
+// Keyboard set 2
+let keyboardObjectEmojis = `🌄🙉🍅🧶👮‍♀️🙊🤞⚽️👠👩‍🌌🐣👙🐗🤛🐨🩰🖕👩‍👦👎🚗👉👐🐽🥑👕🐌🏉🩳🚌🍑✍️🧵🧳🐯`;
+// let keyboardEmojis = keyboardFaceEmojis + keyboardObjectEmojis;
+let keyboardEmojis = [];
+let currentKeyboardSet = 0;
+// Put all keyboard set arrays into here one emoji string has been split
+let keyboardSetNames = undefined;
 // let keyboardEmojis = `🎑🌄🥻🙉🍅👩‍👧‍👦`;
 
 // Max emojis user can type in
@@ -165,39 +174,67 @@ let otherEmojis = `💋💖💚💯💦💣💤👋🖖👌🤏🤞🤟🖕👍�
 let otherEmojisArray = splitter.splitGraphemes(otherEmojis);
 
 // Split two-char emojis and six-char combined emoji
-let splitEmojis = splitter.splitGraphemes(keyboardEmojis);
+let keyboardFaceEmojisArray = splitter.splitGraphemes(keyboardFaceEmojis);
+let keyboardObjectEmojisArray = splitter.splitGraphemes(keyboardObjectEmojis);
+keyboardSetNames = [keyboardFaceEmojisArray, keyboardObjectEmojisArray];
 
 // Append emojis to the emoji keyboard
-for (let i = 0; i < splitEmojis.length; i++) {
-  $(`#emoji-keyboard`).append(
-    `<div class="emoji-key">
-      <div class="emoji-character">${splitEmojis[i]}</div>
-    </div>`
-  );
-}
+fillKeyboard();
 
-// Add Send button
-$(`#emoji-keyboard`).append(`<button id="send-button">Send</button>`);
+// Append emojis to the emoji keyboard
+function fillKeyboard() {
+  // Set the keyboard emojis to current keyboard set
+  keyboardEmojis = keyboardSetNames[currentKeyboardSet];
 
-// When clicked on emoji from keyboard:
-$(`.emoji-character`).click(function () {
-  // Store emoji that was clicked
-  let containedEmoji = $(this).text();
+  // Clear what's currently in keyboard
+  $(`#emoji-keyboard`).text(``);
 
-  // Add it to the input bubble, constraining to max 10 emojis
-  // splintInputEmojis: number of emojis in input box
-  let splitInputEmojis = splitter.splitGraphemes(
-    $(`#emoji-input-bubble`).text()
-  );
-  console.log(splitInputEmojis.length);
-
-  if (splitInputEmojis.length < maxInputEmojis + 1) {
-    $(`#emoji-input-bubble`).append(containedEmoji);
+  // Now fill it
+  for (let i = 0; i < keyboardEmojis.length; i++) {
+    $(`#emoji-keyboard`).append(
+      `<div class="emoji-key">
+        <div class="emoji-character">${keyboardEmojis[i]}</div>
+      </div>`
+    );
   }
 
-  // // Remove emoji from keyboard
-  // $(this).remove();
-});
+  // Add Left and right buttons
+  $(`#emoji-keyboard`).append(
+    `<button id="left-button" class="left-right-buttons"><</button>
+    <button id="right-button" class="left-right-buttons">></button>`
+  );
+
+  // Add Send button
+  $(`#emoji-keyboard`).append(`<button id="send-button">Send</button>`);
+
+  // Handle clicking behaviours
+  emojiCharacterClicking();
+  leftAndRightButtonClick();
+  sendButtonClick();
+}
+
+// Make emoji character clickable
+function emojiCharacterClicking() {
+  // When clicked on emoji from keyboard:
+  $(`.emoji-character`).click(function () {
+    // Store emoji that was clicked
+    let containedEmoji = $(this).text();
+
+    // Add it to the input bubble, constraining to max 10 emojis
+    // splintInputEmojis: number of emojis in input box
+    let splitInputEmojis = splitter.splitGraphemes(
+      $(`#emoji-input-bubble`).text()
+    );
+    console.log(splitInputEmojis.length);
+
+    if (splitInputEmojis.length < maxInputEmojis + 1) {
+      $(`#emoji-input-bubble`).append(containedEmoji);
+    }
+
+    // // Remove emoji from keyboard
+    // $(this).remove();
+  });
+}
 
 // Remove input emoji if backspace or delete key pressed
 $(document).keydown(function (e) {
@@ -240,39 +277,71 @@ function stopAllConversations() {
   }
 }
 
-// After clicking on Send button
-$(`#send-button`).click(function () {
-  // Remove message in input-bubble
-  $(`#emoji-input-bubble`).empty();
-  // Empty out npcResponseMessage
-  npcResponseMessage = ``;
-  $(`#npc-response-message`).empty();
+// Handle clicking effects of left and right buttons
+function leftAndRightButtonClick() {
+  // After clicking on Left button
+  $(`#left-button`).click(function () {
+    if (currentKeyboardSet >= 1) {
+      // go back one keyboard set
+      currentKeyboardSet -= 1;
+    } else {
+      // start with the greatest keyboard set
+      currentKeyboardSet = keyboardSetNames.length - 1;
+    }
 
-  // Randomly select the response type of NPC
-  let responseType = random(emojiCategories);
-  console.log(responseType);
+    fillKeyboard();
+  });
 
-  // Update facial and verbal reaction based on the response type
-  if (responseType === `horny`) {
-    setNpcReaction(hornyEmojisArray);
-  } else if (responseType === `inLove`) {
-    setNpcReaction(inLoveEmojisArray);
-  } else if (responseType === `happy`) {
-    setNpcReaction(happyEmojisArray);
-  } else if (responseType === `neutral`) {
-    setNpcReaction(neutralEmojisArray);
-  } else if (responseType === `surprised`) {
-    setNpcReaction(surprisedEmojisArray);
-  } else if (responseType === `bored`) {
-    setNpcReaction(boredEmojisArray);
-  } else if (responseType === `sad`) {
-    setNpcReaction(sadEmojisArray);
-  } else if (responseType === `sick`) {
-    setNpcReaction(sickEmojisArray);
-  } else if (responseType === `angry`) {
-    setNpcReaction(angryEmojisArray);
-  }
-});
+  // After clicking on Right button
+  $(`#right-button`).click(function () {
+    if (currentKeyboardSet < keyboardSetNames.length - 1) {
+      // go forward one keyboard set
+      currentKeyboardSet++;
+    } else {
+      // start with the lowest keyboard set
+      currentKeyboardSet = 0;
+    }
+
+    fillKeyboard();
+  });
+}
+
+// Handle send button clicking
+function sendButtonClick() {
+  // After clicking on Send button
+  $(`#send-button`).click(function () {
+    // Remove message in input-bubble
+    $(`#emoji-input-bubble`).empty();
+    // Empty out npcResponseMessage
+    npcResponseMessage = ``;
+    $(`#npc-response-message`).empty();
+
+    // Randomly select the response type of NPC
+    let responseType = random(emojiCategories);
+    console.log(responseType);
+
+    // Update facial and verbal reaction based on the response type
+    if (responseType === `horny`) {
+      setNpcReaction(hornyEmojisArray);
+    } else if (responseType === `inLove`) {
+      setNpcReaction(inLoveEmojisArray);
+    } else if (responseType === `happy`) {
+      setNpcReaction(happyEmojisArray);
+    } else if (responseType === `neutral`) {
+      setNpcReaction(neutralEmojisArray);
+    } else if (responseType === `surprised`) {
+      setNpcReaction(surprisedEmojisArray);
+    } else if (responseType === `bored`) {
+      setNpcReaction(boredEmojisArray);
+    } else if (responseType === `sad`) {
+      setNpcReaction(sadEmojisArray);
+    } else if (responseType === `sick`) {
+      setNpcReaction(sickEmojisArray);
+    } else if (responseType === `angry`) {
+      setNpcReaction(angryEmojisArray);
+    }
+  });
+}
 
 // Reaction is composed of two parts: the face and the response message
 function setNpcReaction(reactionArray) {

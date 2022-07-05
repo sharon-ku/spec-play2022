@@ -162,6 +162,8 @@ canvas {
 
   user-select: none;
 
+  /* overflow: scroll; */
+
   /* width: 700px; */
   /* justify-content: space-between; */
 
@@ -212,6 +214,10 @@ canvas {
   height: 70px;
   text-align: center;
 
+  font-size: 3rem;
+}
+
+.left-right-buttons {
   font-size: 3rem;
 }
 
