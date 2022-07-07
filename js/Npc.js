@@ -275,13 +275,17 @@ class Npc {
   // Constrain npc's movement along x and y directions
   constrainMovement() {
     let canvasPadding = 100;
+    let canvasBottomBorder = 400;
     // If npc exceeds left or right of canvas, stop movement in s direction
     if (this.x < canvasPadding || this.x > app.screen.width - canvasPadding) {
       this.vx = 0;
     }
 
     // If npc exceeds top or bottom of canvas, stop movement in y direction
-    if (this.y < canvasPadding || this.y > app.screen.height - canvasPadding) {
+    if (
+      this.y < canvasBottomBorder ||
+      this.y > app.screen.height - canvasPadding
+    ) {
       this.vy = 0;
     }
   }

@@ -16,7 +16,7 @@ keyboardIsInactive();
 let app = new PIXI.Application({
   transparent: false,
   width: 1000, //640
-  height: 360, //360
+  height: 600, //360
   antialias: true,
 });
 document.body.appendChild(app.view);

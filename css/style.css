@@ -11,7 +11,7 @@ Also hides overflow.
 
 :root {
   /* Maximum width of emoji-input-bubble and emoji-keyboard */
-  --keyboard-max-width: 800px;
+  --keyboard-max-width: 900px;
 }
 
 * {
@@ -21,6 +21,7 @@ Also hides overflow.
 }
 
 body {
+  /* background: black; */
   background: midnightblue;
   display: grid; /* Set up the grid and justify/align to center */
   justify-content: center;
@@ -101,7 +102,7 @@ canvas {
 
 #keyboard-section {
   z-index: 2;
-  height: 30vh;
+  height: 20vh;
   /* background: green; */
 
   position: fixed;
