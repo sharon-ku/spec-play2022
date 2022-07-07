@@ -12,6 +12,9 @@ Also hides overflow.
 :root {
   /* Maximum width of emoji-input-bubble and emoji-keyboard */
   --keyboard-max-width: 900px;
+  --yellow: #ffc83d;
+  --pink: #ff80d4;
+  --light-purple: #e5e3ff;
 }
 
 * {
@@ -22,7 +25,7 @@ Also hides overflow.
 
 body {
   /* background: black; */
-  background: midnightblue;
+  background: var(--yellow);
   display: grid; /* Set up the grid and justify/align to center */
   justify-content: center;
   /* height: 100vh; */
@@ -100,7 +103,7 @@ canvas {
   /* background: red; */
 }
 
-#keyboard-section {
+#keyboard-wrapper {
   z-index: 2;
   height: 20vh;
   /* background: green; */
@@ -110,6 +113,16 @@ canvas {
   left: 0px;
   width: 100%;
   margin: auto;
+
+  display: flex;
+  flex-flow: row wrap;
+
+  justify-content: center;
+  align-items: center;
+}
+
+#keyboard-section {
+  position: relative;
 
   /* display: flex;
   flex-flow: row wrap;
@@ -121,9 +134,9 @@ canvas {
 
 #emoji-input-bubble {
   /* white with transparency */
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.8);
 
-  border: 3px solid black;
+  border: 3px solid var(--light-purple);
 
   border-radius: 30px;
 
@@ -142,11 +155,14 @@ canvas {
   user-select: none;
 
   overflow: hidden;
+
+  /* exit-section position is relative to parent emoji-keyboard */
+  position: relative;
 }
 
 /* Keyboard that contains all usable emojis */
 #emoji-keyboard {
-  background: grey;
+  background: var(--light-purple);
 
   max-width: var(--keyboard-max-width);
   /* width: 100%; */
@@ -167,9 +183,6 @@ canvas {
 
   /* width: 700px; */
   /* justify-content: space-between; */
-
-  /* exit-section position is relative to parent emoji-keyboard */
-  position: relative;
 }
 
 /* Emoji key container inside the keyboard */
@@ -204,10 +217,11 @@ canvas {
 
 /* Exit container on top right of keyboard */
 #exit-container {
-  /* position is relatie to parent emoji-keyboard */
+  /* position is relatie to parent keyboard-section */
   position: absolute;
   right: -10px;
-  bottom: 35px;
+  /* bottom: 30vh; */
+  top: 0px;
 }
 
 #exit-button {
@@ -216,12 +230,61 @@ canvas {
   text-align: center;
 
   font-size: 3rem;
+  background: black;
+  color: white;
+  border-radius: 20px;
+  border: 2px solid white;
 }
 
 .left-right-buttons {
   font-size: 3rem;
+  padding: 0 20px;
+  border-radius: 10px;
 }
 
-#send-button {
+#left-button {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#right-button {
+  margin-right: 30px;
+}
+
+/* UNUSED: delete later */
+/* #send-button-container {
+  position: absolute;
+  right: 20px;
+  top: 60px;
+} */
+
+/* UNUSED: delete later */
+/* #send-button2 {
+  width: 200px;
+  height: 70px;
+  text-align: center;
+
   font-size: 3rem;
+  background: black;
+  color: white;
+  border-radius: 20px;
+} */
+
+#send-button {
+  width: 200px;
+  height: 80px;
+  background: black;
+  font-size: 3.5rem;
+  color: white;
+  border-radius: 20px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* border-radius: 50%; */
+}
+
+#send-button:hover {
+  cursor: pointer;
+  font-size: 4rem;
 }

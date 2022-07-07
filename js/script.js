@@ -16,7 +16,7 @@ keyboardIsInactive();
 let app = new PIXI.Application({
   transparent: false,
   width: 1000, //640
-  height: 600, //360
+  height: 500, //360
   antialias: true,
 });
 document.body.appendChild(app.view);
@@ -99,7 +99,8 @@ function keyboardIsInactive() {
 // Keyboard set 1
 let keyboardFaceEmojis = `🙂😄😁🥳😋😛😏😘😍😚😲🤯😧😨😤😡😠🤬😴🥱😅🤨😒🙄🤔`;
 // Keyboard set 2
-let keyboardObjectEmojis = `🌄🙉🍅🧶👮‍♀️🙊🤞⚽️👠👩‍🌌🐣👙🐗🤛🐨🩰🖕👩‍👦👎🚗👉👐🐽🥑👕🐌🏉🩳🚌🍑✍️🧵🧳🐯`;
+// let keyboardObjectEmojis = `🌄🙉🍅🧶👮‍♀️🙊🤞⚽️👠👩‍🌌🐣👙🐗🤛🐨🩰🖕👩‍👦👎🚗👉👐🐽🥑👕🐌🏉🩳🚌🍑✍️🧵🧳🐯`;
+let keyboardObjectEmojis = `🙉🍅👮‍♀️🙊🤞⚽️👠‍🌌🐣👙🐗🤛🩰🖕👩‍👦👎🚗👉🥑🐌🩳🚌🍑🧳🐯`;
 // let keyboardEmojis = keyboardFaceEmojis + keyboardObjectEmojis;
 let keyboardEmojis = [];
 let currentKeyboardSet = 0;
@@ -205,7 +206,7 @@ function fillKeyboard() {
   );
 
   // Add Send button
-  $(`#emoji-keyboard`).append(`<button id="send-button">Send</button>`);
+  $(`#emoji-keyboard`).append(`<button id="send-button">✉️➟ </button>`);
 
   // Handle clicking behaviours
   emojiCharacterClicking();
@@ -310,35 +311,38 @@ function leftAndRightButtonClick() {
 function sendButtonClick() {
   // After clicking on Send button
   $(`#send-button`).click(function () {
-    // Remove message in input-bubble
-    $(`#emoji-input-bubble`).empty();
-    // Empty out npcResponseMessage
-    npcResponseMessage = ``;
-    $(`#npc-response-message`).empty();
+    // If input-bubble is not empty:
+    if ($(`#emoji-input-bubble`).text() != ``) {
+      // Remove message in input-bubble
+      $(`#emoji-input-bubble`).empty();
+      // Empty out npcResponseMessage
+      npcResponseMessage = ``;
+      $(`#npc-response-message`).empty();
 
-    // Randomly select the response type of NPC
-    responseType = random(emojiCategories);
-    console.log(responseType);
+      // Randomly select the response type of NPC
+      responseType = random(emojiCategories);
+      console.log(responseType);
 
-    // Update facial and verbal reaction based on the response type
-    if (responseType === `horny`) {
-      setNpcReaction(hornyEmojisArray);
-    } else if (responseType === `inLove`) {
-      setNpcReaction(inLoveEmojisArray);
-    } else if (responseType === `happy`) {
-      setNpcReaction(happyEmojisArray);
-    } else if (responseType === `neutral`) {
-      setNpcReaction(neutralEmojisArray);
-    } else if (responseType === `surprised`) {
-      setNpcReaction(surprisedEmojisArray);
-    } else if (responseType === `bored`) {
-      setNpcReaction(boredEmojisArray);
-    } else if (responseType === `sad`) {
-      setNpcReaction(sadEmojisArray);
-    } else if (responseType === `sick`) {
-      setNpcReaction(sickEmojisArray);
-    } else if (responseType === `angry`) {
-      setNpcReaction(angryEmojisArray);
+      // Update facial and verbal reaction based on the response type
+      if (responseType === `horny`) {
+        setNpcReaction(hornyEmojisArray);
+      } else if (responseType === `inLove`) {
+        setNpcReaction(inLoveEmojisArray);
+      } else if (responseType === `happy`) {
+        setNpcReaction(happyEmojisArray);
+      } else if (responseType === `neutral`) {
+        setNpcReaction(neutralEmojisArray);
+      } else if (responseType === `surprised`) {
+        setNpcReaction(surprisedEmojisArray);
+      } else if (responseType === `bored`) {
+        setNpcReaction(boredEmojisArray);
+      } else if (responseType === `sad`) {
+        setNpcReaction(sadEmojisArray);
+      } else if (responseType === `sick`) {
+        setNpcReaction(sickEmojisArray);
+      } else if (responseType === `angry`) {
+        setNpcReaction(angryEmojisArray);
+      }
     }
   });
 }

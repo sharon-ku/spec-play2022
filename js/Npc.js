@@ -247,13 +247,13 @@ class Npc {
 
   // Code that should be updated every frame
   loop() {
-    // Constrain npc's movement along x and y directions
-    this.constrainMovement();
-
     // Handles random walking
     if (this.movementType === `walk`) {
       this.walk();
     }
+
+    // Constrain npc's movement along x and y directions
+    this.constrainMovement();
 
     // Only show target arrow when talking to or hovering over NPC
     this.handleTargetArrowVisibility();
@@ -275,7 +275,7 @@ class Npc {
   // Constrain npc's movement along x and y directions
   constrainMovement() {
     let canvasPadding = 100;
-    let canvasBottomBorder = 400;
+    let canvasVerticalBorder = 200;
     // If npc exceeds left or right of canvas, stop movement in s direction
     if (this.x < canvasPadding || this.x > app.screen.width - canvasPadding) {
       this.vx = 0;
@@ -283,8 +283,8 @@ class Npc {
 
     // If npc exceeds top or bottom of canvas, stop movement in y direction
     if (
-      this.y < canvasBottomBorder ||
-      this.y > app.screen.height - canvasPadding
+      this.y < canvasVerticalBorder ||
+      this.y > app.screen.height - canvasVerticalBorder
     ) {
       this.vy = 0;
     }
