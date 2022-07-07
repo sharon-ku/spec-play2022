@@ -13,6 +13,10 @@ class Npc {
     this.vx = 0;
     this.vy = 0;
 
+    // Defines type of movement
+    // Options: `walk`, `approachOrRetreat`
+    this.movementType = `walk`;
+
     // Speed at which NPC is shaking
     this.shakeSpeed = 0;
 
@@ -22,6 +26,8 @@ class Npc {
       x: 1,
       y: 1,
     };
+    // used to set scale of entire body
+    this.currentScale = undefined;
 
     // Possible NPC tint colors
     // Tint source: https://scottmcdonnell.github.io/pixi-examples/index.html?s=demos&f=tinting.js&title=Tinting
@@ -128,6 +134,22 @@ class Npc {
     // center text
     this.messageText.anchor.set(0, 0.5);
 
+    // create a new body Sprite from an image path.
+    this.targetArrow = PIXI.Sprite.from("assets/images/target-arrow.png");
+    // set to true if hovering over NPC
+    this.hovering = false;
+    // body's position
+    this.targetArrow.x = undefined;
+    this.targetArrow.y = undefined;
+    // offset from this.x and this.y
+    this.targetArrow.offset = {
+      x: 0,
+      y: -60,
+    };
+    // center the sprite's anchor point
+    this.targetArrow.anchor.set(0.5);
+    app.stage.addChild(this.targetArrow);
+
     // Change head and body color of NPC
     this.changeTintColor();
 
@@ -174,16 +196,20 @@ class Npc {
     this.shakeSpeed += 0.1;
   }
 
-  // When hovering over body, scale up
+  // When hovering over body, scale up and show target arrow
   hover() {
-    let currentScale = 1.1;
-    this.updateNpcScale(currentScale);
+    this.currentScale = 1.1;
+    this.updateNpcScale(this.currentScale);
+    // Hovering boolean is used to show target arrow only when hovering
+    this.hovering = true;
   }
 
-  // When leave hovering over body, scale down to normal
+  // When leave hovering over body, scale down to normal and hide target arrow
   onHoverOut() {
-    let currentScale = 1;
-    this.updateNpcScale(currentScale);
+    this.currentScale = 1;
+    this.updateNpcScale(this.currentScale);
+    // Hovering boolean is used to show target arrow only when hovering
+    this.hovering = false;
   }
 
   // Set Npc scale based on currentScale;
@@ -194,8 +220,11 @@ class Npc {
     this.body.scale.x = currentScale;
     this.body.scale.y = currentScale;
 
+    this.faceText.scale.x = currentScale;
+    this.faceText.scale.y = currentScale;
+
     // Update facing direction
-    this.updateFacingDirection();
+    // this.updateFacingDirection(currentScale);
   }
 
   // Head is clicked and we're not already talking to this character
@@ -222,10 +251,25 @@ class Npc {
     this.constrainMovement();
 
     // Handles random walking
-    this.walk();
+    if (this.movementType === `walk`) {
+      this.walk();
+    }
+
+    // Only show target arrow when talking to or hovering over NPC
+    this.handleTargetArrowVisibility();
 
     // // Shake the body
     // this.shake();
+  }
+
+  // Hide or show target arrow
+  handleTargetArrowVisibility() {
+    // Only show target arrow when talking to or hovering over NPC
+    if (this.talking || this.hovering) {
+      this.targetArrow.visible = true;
+    } else {
+      this.targetArrow.visible = false;
+    }
   }
 
   // Constrain npc's movement along x and y directions
@@ -261,6 +305,9 @@ class Npc {
 
   // Update body part positions that are relative to this.x and this.y
   updateBodyPartPositions() {
+    this.targetArrow.x = this.x + this.targetArrow.offset.x;
+    this.targetArrow.y = this.y + this.targetArrow.offset.y;
+
     this.body.x = this.x + this.body.offset.x;
     this.body.y = this.y + this.body.offset.y;
 
@@ -279,28 +326,95 @@ class Npc {
     // If walking to the right:
     if (this.vx >= 0) {
       // face right
-      this.scale.x = 1;
+      this.scale.x = Math.abs(this.scale.x);
+      this.scale.y = Math.abs(this.scale.x);
       // put face emoji closer to right
       this.faceText.offset.x = 4;
     }
     // Else if walking to the left:
     else if (this.vx < 0) {
       // face left
-      this.scale.x = -1;
+      this.scale.x = -Math.abs(this.scale.x);
+      this.scale.y = Math.abs(this.scale.x);
       // put face emoji closer to left
       this.faceText.offset.x = -4;
     }
 
     // Set scale to body and emoji face text
     this.body.scale.x = this.scale.x;
+    this.body.scale.y = this.scale.y;
+
     this.faceText.scale.x = this.scale.x;
+    this.faceText.scale.y = this.scale.y;
   }
 
   // Update face when clicked on Send button
   updateFace() {
     if (this.talking) {
       this.faceText.text = nextEmojiToDisplay;
+
+      // UNCOMMENT THIS IF WANT APPROACH OR RETREAT CODE
+      // Bring the NPC forward or back depending on response type
+      // this.approachOrRetreat();
     }
+  }
+
+  // Bring the NPC forward or back depending on response type
+  approachOrRetreat() {
+    this.movementType = `approachOrRetreat`;
+
+    // if response type is a positive one, approach player:
+    if (
+      responseType === `horny` ||
+      responseType === `inLove` ||
+      responseType === `happy`
+    ) {
+      this.approach();
+      console.log(`response type approach`);
+    }
+    // else if generally negative, retreat
+    else if (
+      responseType === `bored` ||
+      responseType === `sad` ||
+      responseType === `sick`
+    ) {
+      this.retreat();
+      console.log(`response type retreat`);
+    }
+    // else if surprised or angry, different behaviour
+    else if (responseType === `surprised` || responseType === `angry`) {
+      if (Math.random() < 0.5) {
+        // 50% of time, approach player to confront them
+        this.approach();
+      } else {
+        // remaining time, retreat out of anger
+        this.retreat();
+      }
+    }
+    // else if neutral, don't move
+    else if (responseType === `neutral`) {
+      // no reaction if responseType === `neutral`
+    }
+  }
+
+  approach() {
+    // PUT CODE HERE
+    this.currentScale *= 1.2;
+    this.updateNpcScale(this.currentScale);
+
+    this.movementType = `walk`;
+
+    console.log(`approaching`);
+  }
+
+  retreat() {
+    // PUT CODE HERE
+    this.currentScale /= 1.2;
+    this.updateNpcScale(this.currentScale);
+
+    this.movementType = `walk`;
+
+    console.log(`retreating`);
   }
 
   // Update response message when clicked on Send button

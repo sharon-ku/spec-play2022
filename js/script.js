@@ -317,7 +317,7 @@ function sendButtonClick() {
     $(`#npc-response-message`).empty();
 
     // Randomly select the response type of NPC
-    let responseType = random(emojiCategories);
+    responseType = random(emojiCategories);
     console.log(responseType);
 
     // Update facial and verbal reaction based on the response type
@@ -354,7 +354,7 @@ function setNpcReaction(reactionArray) {
 
 // Update NPC's face based on response type
 function updateNpcFace(reactionArray) {
-  // Fetch a positive emoji
+  // Fetch an emoji
   nextEmojiToDisplay = random(reactionArray);
   // Update emoji face and response message
   $(`#emoji-face`).text(nextEmojiToDisplay);
