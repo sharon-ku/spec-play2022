@@ -104,6 +104,7 @@ class Npc {
       //   // lineJoin: "round",
     });
 
+    // starting message in the face/head emoji
     this.faceText = new PIXI.Text("🙊", this.faceStyle);
     this.faceText.x = undefined;
     this.faceText.y = undefined;
@@ -118,21 +119,46 @@ class Npc {
 
     app.stage.addChild(this.faceText);
 
-    // NPC response message
+    // NPC response message text
     this.messageStyle = new PIXI.TextStyle({
       fontFamily: "Arial",
-      fontSize: 40,
+      fontSize: 35,
     });
-    this.messageText = new PIXI.Text("🙊", this.messageStyle);
+    this.messageText = new PIXI.Text("", this.messageStyle);
     this.messageText.x = undefined;
     this.messageText.y = undefined;
     // offset from this.x and this.y
     this.messageText.offset = {
-      x: 50, //110
+      x: 60, //110
       y: 0,
     };
     // center text
     this.messageText.anchor.set(0, 0.5);
+
+    // NPC response message box
+    this.messageBox = new PIXI.Graphics();
+    this.messageBox.beginFill(0xffffff); //0x5cafe2
+    this.messageBox.cornerRadius = 0; //40
+    this.messageBox.drawRoundedRect(
+      0,
+      0,
+      this.messageText.width,
+      this.messageText.height,
+      this.messageBox.cornerRadius
+    );
+    // padding
+    this.messageBox.padding = {
+      x: 20,
+      y: 10,
+    };
+    // position
+    this.messageBox.x = undefined;
+    this.messageBox.y = undefined;
+    // offset from this.x and this.y
+    this.messageBox.offset = {
+      x: this.messageText.offset.x - this.messageBox.padding.x / 2,
+      y: this.messageText.offset.y - this.messageBox.padding.y / 2 - 20,
+    };
 
     // create a new body Sprite from an image path.
     this.targetArrow = PIXI.Sprite.from("assets/images/target-arrow.png");
@@ -156,6 +182,7 @@ class Npc {
     // Update body part positions that are relative to this.x and this.y
     this.updateBodyPartPositions();
 
+    app.stage.addChild(this.messageBox);
     app.stage.addChild(this.messageText);
   }
 
@@ -260,6 +287,24 @@ class Npc {
 
     // // Shake the body
     // this.shake();
+
+    // Set message box size based on length of message
+    this.updateMessageBoxSizeAndVisibility();
+  }
+
+  // Set message box size based on length of message
+  updateMessageBoxSizeAndVisibility() {
+    if (this.messageText.text === ``) {
+      // hide messsage box if no message
+      this.messageBox.visible = false;
+    } else {
+      console.log(`there's a message!`);
+      this.messageBox.visible = true;
+      this.messageBox.width =
+        this.messageText.width + this.messageBox.padding.x;
+      this.messageBox.height =
+        this.messageText.height + this.messageBox.padding.y;
+    }
   }
 
   // Hide or show target arrow
@@ -323,6 +368,9 @@ class Npc {
 
     this.messageText.x = this.x + this.messageText.offset.x;
     this.messageText.y = this.y + this.messageText.offset.y;
+
+    this.messageBox.x = this.x + this.messageBox.offset.x;
+    this.messageBox.y = this.y + this.messageBox.offset.y;
   }
 
   // Flip the emoji when it's moving left or right
