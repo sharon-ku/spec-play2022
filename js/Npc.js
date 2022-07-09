@@ -144,7 +144,7 @@ class Npc {
 
     this.messageStyle = new PIXI.TextStyle({
       fontFamily: "Arial",
-      fontSize: 35,
+      fontSize: 30,
     });
     this.messageText = new PIXI.Text("", this.messageStyle);
     this.messageText.x = undefined;
@@ -152,7 +152,7 @@ class Npc {
     // offset from this.x and this.y
     this.messageText.offset = {
       x: 60, //110
-      y: 0,
+      y: -25,
     };
     // center text
     this.messageText.anchor.set(0, 0.5);
@@ -163,18 +163,22 @@ class Npc {
 
     this.messageBox = new PIXI.Graphics();
     this.messageBox.beginFill(0xffffff); //0x5cafe2
-    this.messageBox.cornerRadius = 0; //40
+    // temporarily set widht and height to 100 so that cornerRadius works properly
+    // these values will be reset to match string length later on
+    this.messageBox.tempWidth = 100;
+    this.messageBox.tempHeight = 100;
+    this.messageBox.cornerRadius = 150; //40
     this.messageBox.drawRoundedRect(
       0,
       0,
-      this.messageText.width,
-      this.messageText.height,
+      this.messageBox.tempWidth,
+      this.messageBox.tempHeight,
       this.messageBox.cornerRadius
     );
     // padding
     this.messageBox.padding = {
-      x: 20,
-      y: 10,
+      x: 30,
+      y: 20,
     };
     // position
     this.messageBox.x = undefined;
@@ -182,7 +186,7 @@ class Npc {
     // offset from this.x and this.y
     this.messageBox.offset = {
       x: this.messageText.offset.x - this.messageBox.padding.x / 2,
-      y: this.messageText.offset.y - this.messageBox.padding.y / 2 - 20,
+      y: this.messageText.offset.y - this.messageBox.padding.y / 2 - 15,
     };
 
     // ----------------------------
@@ -362,6 +366,8 @@ class Npc {
       this.messageBox.visible = false;
     } else {
       this.messageBox.visible = true;
+      this.messageBox.cornerRadius = 100;
+
       this.messageBox.width =
         this.messageText.width + this.messageBox.padding.x;
       this.messageBox.height =
