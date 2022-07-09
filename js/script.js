@@ -95,18 +95,30 @@ function keyboardIsInactive() {
 }
 
 // let keyboardEmojis = `🎑🌄🥻🙉🍅🥽🧶👮‍♀️🙊🤞👩‍👧‍👦⚽️👠🧐🧥💂👩‍🦱🌌🐣⌚️👙😉🐗😞🤛🐨🩰🖕👩‍👦👎😒😕😊🌉🚗👉👐🐽🥳🥑👕🐌🏉🩳🕍🚄🚌🍑⛪️✍️🧵🧳🧑😔🐯🏑`;
+
+// Put all keyboard set strings into here
+// The strings will be converted into arrays
+let keyboardSets = [
+  // Keyboard set 1: faces
+  `🙂😄😁🥳😋😛😏😘😍😚😲🤯😧😨😤😡😠🤬😴🥱😅🤨😒🙄🤔`,
+  // Keyboard set 2: body parts
+  `👋🖐👌🖖🤏✌️🤞🤘👉🖕👍👎👊🤜👏🙏🤝💪👂🦶👃👀🧠👅💋`,
+  // Keyboard set 3: objects
+  `❤️💔💖💝❌💯💤❓🎵💭⌚️📞💡💰💳💎🔫💣🪓🔪⚰️🔮🎊🎉🎁`,
+  // Keyboard set 4: nature
+  `🎄🌳🌴🍀🍂🍄💐🥀🌸🌞🌝🌎🪐⭐️🌟✨⚡️🔥🌈☁️❄️☃️💧💦☂️`,
+  // Keyboard set 5: animals
+  `🐶🐱🐹🐷🐼🐇🐔🐵🙈🐧🐣🐣🦉🐴🦄🐛🦋🦂🐌🐙🐠🐳🦧🦘🦥`,
+  // Keyboard set 6: food
+  `🍎🍌🍉🍇🍓🍒🍑🍍🍅🍆🥑🌶️🌽🍞🥖🧀🍳🍗🌭🍔🍟🍕🥗🍣🍰`,
+];
 // let keyboardEmojis = `🎑🌄🥻🙉🍅🥽🧶👮‍♀️🙊🤞👩‍👧‍👦⚽️👠🧐🧥💂👩‍🦱🌌🐣⌚️👙😉🐗😞🤛🐨🩰🖕👩‍👦👎😒`;
-// Keyboard set 1
-let keyboardFaceEmojis = `🙂😄😁🥳😋😛😏😘😍😚😲🤯😧😨😤😡😠🤬😴🥱😅🤨😒🙄🤔`;
-// Keyboard set 2
-// let keyboardObjectEmojis = `🌄🙉🍅🧶👮‍♀️🙊🤞⚽️👠👩‍🌌🐣👙🐗🤛🐨🩰🖕👩‍👦👎🚗👉👐🐽🥑👕🐌🏉🩳🚌🍑✍️🧵🧳🐯`;
-let keyboardObjectEmojis = `🙉🍅👮‍♀️🙊🤞⚽️👠‍🌌🐣👙🐗🤛🩰🖕👩‍👦👎🚗👉🥑🐌🩳🚌🍑🧳🐯`;
+// let keyboardObjectEmojis = `🌄🙉🍅🧶👮‍♀️🙊🤞⚽️👠👩‍🌌🐣👙🐗🤛🐨🩰🖕👩‍👦👎🚗👉👐🐽🥑👕🐌🏉🩳🚌🍑✍️🧵🧳🐯`,
+// `🙉🍅👮‍♀️🙊🤞⚽️👠‍🌌🐣👙🐗🤛🩰🖕👩‍👦👎🚗👉🥑🐌🩳🚌🍑🧳🐯`,
+
 // let keyboardEmojis = keyboardFaceEmojis + keyboardObjectEmojis;
 let keyboardEmojis = [];
 let currentKeyboardSet = 0;
-// Put all keyboard set arrays into here one emoji string has been split
-let keyboardSetNames = undefined;
-// let keyboardEmojis = `🎑🌄🥻🙉🍅👩‍👧‍👦`;
 
 // Max emojis user can type in
 let maxInputEmojis = 10;
@@ -175,9 +187,9 @@ let otherEmojis = `💋💖💚💯💦💣💤👋🖖👌🤏🤞🤟🖕👍�
 let otherEmojisArray = splitter.splitGraphemes(otherEmojis);
 
 // Split two-char emojis and six-char combined emoji
-let keyboardFaceEmojisArray = splitter.splitGraphemes(keyboardFaceEmojis);
-let keyboardObjectEmojisArray = splitter.splitGraphemes(keyboardObjectEmojis);
-keyboardSetNames = [keyboardFaceEmojisArray, keyboardObjectEmojisArray];
+for (let i = 0; i < keyboardSets.length; i++) {
+  keyboardSets[i] = splitter.splitGraphemes(keyboardSets[i]);
+}
 
 // Append emojis to the emoji keyboard
 fillKeyboard();
@@ -185,7 +197,7 @@ fillKeyboard();
 // Append emojis to the emoji keyboard
 function fillKeyboard() {
   // Set the keyboard emojis to current keyboard set
-  keyboardEmojis = keyboardSetNames[currentKeyboardSet];
+  keyboardEmojis = keyboardSets[currentKeyboardSet];
 
   // Clear what's currently in keyboard
   $(`#emoji-keyboard`).text(``);
@@ -287,7 +299,7 @@ function leftAndRightButtonClick() {
       currentKeyboardSet -= 1;
     } else {
       // start with the greatest keyboard set
-      currentKeyboardSet = keyboardSetNames.length - 1;
+      currentKeyboardSet = keyboardSets.length - 1;
     }
 
     fillKeyboard();
@@ -295,7 +307,7 @@ function leftAndRightButtonClick() {
 
   // After clicking on Right button
   $(`#right-button`).click(function () {
-    if (currentKeyboardSet < keyboardSetNames.length - 1) {
+    if (currentKeyboardSet < keyboardSets.length - 1) {
       // go forward one keyboard set
       currentKeyboardSet++;
     } else {
