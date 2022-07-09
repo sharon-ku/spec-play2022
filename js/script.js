@@ -141,7 +141,7 @@ let keyboardEmojis = [];
 let currentKeyboardSet = 0;
 
 // Max emojis user can type in
-let maxInputEmojis = 10;
+let maxInputEmojis = 20;
 
 /*
 Handle NPC facial expressions
@@ -250,9 +250,6 @@ function fillKeyboard() {
 function emojiCharacterClicking() {
   // When clicked on emoji from keyboard:
   $(`.emoji-character`).click(function () {
-    // Play click SFX
-    clickEmojiSFX.play();
-
     // Store emoji that was clicked
     let containedEmoji = $(this).text();
 
@@ -264,7 +261,14 @@ function emojiCharacterClicking() {
     console.log(splitInputEmojis.length);
 
     if (splitInputEmojis.length < maxInputEmojis + 1) {
+      // Play click SFX
+      clickEmojiSFX.play();
+
+      // Add emoji to input bubble
       $(`#emoji-input-bubble`).append(containedEmoji);
+    } else if (splitInputEmojis.length === maxInputEmojis + 1) {
+      // if reach max number emojis: play sfx
+      errorSFX.play();
     }
 
     // // Remove emoji from keyboard

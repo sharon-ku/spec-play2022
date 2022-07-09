@@ -144,7 +144,7 @@ canvas {
   height: 150px;
   max-width: var(--keyboard-max-width);
 
-  padding: 20px;
+  padding: 20px 40px;
 
   /* display: flex; */
   text-align: center;
