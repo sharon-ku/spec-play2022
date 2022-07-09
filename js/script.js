@@ -29,6 +29,9 @@ const NUM_NPCS = 8;
 // Create many npcs
 createManyNpcs();
 
+// Depth sorting for NPCs
+depthSortNpcs();
+
 // Create many npcs
 function createManyNpcs() {
   for (let i = 0; i < NUM_NPCS; i++) {
@@ -40,8 +43,15 @@ function createManyNpcs() {
     let npc = new Npc(npcProperties);
     npcs.push(npc);
   }
+}
 
-  // app.stage.addChild(npc);
+// Depth sorting for NPCs based on y positions
+function depthSortNpcs() {
+  app.stage.children.sort(sortByY);
+
+  for (let i = 0; i < app.stage.children.length; i++) {
+    app.stage.children[i].zIndex = i;
+  }
 }
 
 // Return random value between min and max
@@ -58,8 +68,12 @@ app.ticker.add(gameLoop);
 function gameLoop(delta) {
   for (let i = 0; i < npcs.length; i++) {
     let npc = npcs[i];
+
     npc.loop();
   }
+
+  // Sort NPC's depth based on y positions
+  depthSortNpcs();
 
   // iterate through the dudes and update the positions
   // for (let i = 0; i < dudeArray.length; i++) {
@@ -84,6 +98,11 @@ function gameLoop(delta) {
   // }
 }
 
+// Source: Pippin's lecture - https://pippinbarr.com/cart253-2020/topics/object-oriented-programming/introducing-object-oriented-programming.html#display-order
+function sortByY(npc1, npc2) {
+  return npc1.children[1].y - npc2.children[1].y;
+}
+
 function keyboardIsActive() {
   keyboardActive = true;
   $(`#keyboard-section`).show();
@@ -98,6 +117,7 @@ function keyboardIsInactive() {
 
 // Put all keyboard set strings into here
 // The strings will be converted into arrays
+// Source: https://getemoji.com/
 let keyboardSets = [
   // Keyboard set 1: faces
   `🙂😄😁🥳😋😛😏😘😍😚😲🤯😧😨😤😡😠🤬😴🥱😅🤨😒🙄🤔`,

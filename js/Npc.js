@@ -2,8 +2,17 @@
 // Source: https://www.youtube.com/watch?v=NG5qxx9Ij6Q&ab_channel=DowerChin
 class Npc {
   constructor({ x, y }) {
+    // Put npc inside a container which will later be used for depth sorting (in script.js)
+    this.npcContainer = new PIXI.Container();
+    // Add npcContainer to the PIXI app stage
+    app.stage.addChild(this.npcContainer);
+
     // set to true if currently talking to this npc
     this.talking = false;
+
+    // ----------------------------
+    // Movement & Scaling
+    // ----------------------------
 
     // Npc position: all body parts are offset from these coordinates
     this.x = x;
@@ -29,6 +38,10 @@ class Npc {
     // used to set scale of entire body
     this.currentScale = undefined;
 
+    // ----------------------------
+    // Colors
+    // ----------------------------
+
     // Possible NPC tint colors
     // Tint source: https://scottmcdonnell.github.io/pixi-examples/index.html?s=demos&f=tinting.js&title=Tinting
     this.pink = `FF80D4`;
@@ -51,6 +64,10 @@ class Npc {
     // randomly choose a tint color; hexcodes are prefixed by `0x`
     this.tintColor = `0x` + this.getRandomElementFrom(this.possibleColors);
 
+    // ----------------------------
+    // Body
+    // ----------------------------
+
     // create a new body Sprite from an image path.
     this.body = PIXI.Sprite.from("assets/images/npc-body.png");
     // body's position
@@ -67,7 +84,9 @@ class Npc {
     // Make the body clickable to start keyboard communication
     this.clickToInteract(this.body);
 
-    app.stage.addChild(this.body);
+    // ----------------------------
+    // Head
+    // ----------------------------
 
     this.head = new PIXI.Graphics();
     this.head.beginFill(0xffffff); //0x5cafe2
@@ -84,7 +103,9 @@ class Npc {
     // Make the head clickable to start keyboard communication
     this.clickToInteract(this.head);
 
-    app.stage.addChild(this.head);
+    // ----------------------------
+    // Emoji face
+    // ----------------------------
 
     this.faceStyle = new PIXI.TextStyle({
       fontFamily: "Arial",
@@ -117,9 +138,10 @@ class Npc {
     // center text
     this.faceText.anchor.set(0.5);
 
-    app.stage.addChild(this.faceText);
+    // ----------------------------
+    // Response text
+    // ----------------------------
 
-    // NPC response message text
     this.messageStyle = new PIXI.TextStyle({
       fontFamily: "Arial",
       fontSize: 35,
@@ -135,7 +157,10 @@ class Npc {
     // center text
     this.messageText.anchor.set(0, 0.5);
 
-    // NPC response message box
+    // ----------------------------
+    // Response message box
+    // ----------------------------
+
     this.messageBox = new PIXI.Graphics();
     this.messageBox.beginFill(0xffffff); //0x5cafe2
     this.messageBox.cornerRadius = 0; //40
@@ -160,6 +185,10 @@ class Npc {
       y: this.messageText.offset.y - this.messageBox.padding.y / 2 - 20,
     };
 
+    // ----------------------------
+    // Target arrow
+    // ----------------------------
+
     // create a new body Sprite from an image path.
     this.targetArrow = PIXI.Sprite.from("assets/images/target-arrow.png");
     // set to true if hovering over NPC
@@ -174,16 +203,56 @@ class Npc {
     };
     // center the sprite's anchor point
     this.targetArrow.anchor.set(0.5);
-    app.stage.addChild(this.targetArrow);
+
+    // ----------------------------
+    // Applies to all of body
+    // ----------------------------
 
     // Change head and body color of NPC
     this.changeTintColor();
 
+    // Add parts and texts to app stage
+    this.addAllBodyParts();
+
     // Update body part positions that are relative to this.x and this.y
     this.updateBodyPartPositions();
+  }
 
-    app.stage.addChild(this.messageBox);
-    app.stage.addChild(this.messageText);
+  // Change head and body color of NPC
+  changeTintColor() {
+    this.head.tint = this.tintColor;
+    this.body.tint = this.tintColor;
+  }
+
+  // Add parts and texts to app stage
+  addAllBodyParts() {
+    this.npcContainer.addChild(this.body);
+    this.npcContainer.addChild(this.head);
+    this.npcContainer.addChild(this.faceText);
+    this.npcContainer.addChild(this.messageBox);
+    this.npcContainer.addChild(this.messageText);
+    this.npcContainer.addChild(this.targetArrow);
+  }
+
+  // Update body part positions that are relative to this.x and this.y
+  updateBodyPartPositions() {
+    this.targetArrow.x = this.x + this.targetArrow.offset.x;
+    this.targetArrow.y = this.y + this.targetArrow.offset.y;
+
+    this.body.x = this.x + this.body.offset.x;
+    this.body.y = this.y + this.body.offset.y;
+
+    this.head.x = this.x + this.head.offset.x;
+    this.head.y = this.y + this.head.offset.y;
+
+    this.faceText.x = this.x + this.faceText.offset.x;
+    this.faceText.y = this.y + this.faceText.offset.y;
+
+    this.messageText.x = this.x + this.messageText.offset.x;
+    this.messageText.y = this.y + this.messageText.offset.y;
+
+    this.messageBox.x = this.x + this.messageBox.offset.x;
+    this.messageBox.y = this.y + this.messageBox.offset.y;
   }
 
   // Make a body part clickable to start keyboard communication
@@ -206,12 +275,6 @@ class Npc {
   // Get a random element from an array
   getRandomElementFrom(arrayName) {
     return arrayName[Math.floor(Math.random() * arrayName.length)];
-  }
-
-  // Change head and body color of NPC
-  changeTintColor() {
-    this.head.tint = this.tintColor;
-    this.body.tint = this.tintColor;
   }
 
   // Shake the body (as if NPC is scared)
@@ -298,7 +361,6 @@ class Npc {
       // hide messsage box if no message
       this.messageBox.visible = false;
     } else {
-      console.log(`there's a message!`);
       this.messageBox.visible = true;
       this.messageBox.width =
         this.messageText.width + this.messageBox.padding.x;
@@ -350,27 +412,6 @@ class Npc {
 
     // Update body part positions that are relative to this.x and this.y
     this.updateBodyPartPositions();
-  }
-
-  // Update body part positions that are relative to this.x and this.y
-  updateBodyPartPositions() {
-    this.targetArrow.x = this.x + this.targetArrow.offset.x;
-    this.targetArrow.y = this.y + this.targetArrow.offset.y;
-
-    this.body.x = this.x + this.body.offset.x;
-    this.body.y = this.y + this.body.offset.y;
-
-    this.head.x = this.x + this.head.offset.x;
-    this.head.y = this.y + this.head.offset.y;
-
-    this.faceText.x = this.x + this.faceText.offset.x;
-    this.faceText.y = this.y + this.faceText.offset.y;
-
-    this.messageText.x = this.x + this.messageText.offset.x;
-    this.messageText.y = this.y + this.messageText.offset.y;
-
-    this.messageBox.x = this.x + this.messageBox.offset.x;
-    this.messageBox.y = this.y + this.messageBox.offset.y;
   }
 
   // Flip the emoji when it's moving left or right
