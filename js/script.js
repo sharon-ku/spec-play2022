@@ -250,6 +250,9 @@ function fillKeyboard() {
 function emojiCharacterClicking() {
   // When clicked on emoji from keyboard:
   $(`.emoji-character`).click(function () {
+    // Play click SFX
+    clickEmojiSFX.play();
+
     // Store emoji that was clicked
     let containedEmoji = $(this).text();
 
@@ -274,6 +277,9 @@ $(document).keydown(function (e) {
   // 8: backspace key
   // 46: delete key
   if (e.keyCode === 8 || e.keyCode === 46) {
+    // Play Error SFX
+    errorSFX.play();
+
     // Grab current string in input and split emojis properly into array
     let currentStringArray = splitter.splitGraphemes(
       $(`#emoji-input-bubble`).text()
@@ -292,7 +298,9 @@ $(document).keydown(function (e) {
 
 // After clicking on x button
 $(`#exit-button`).click(function () {
-  console.log(`exit clicked`);
+  // Play exit button SFX
+  exitButtonSFX.play();
+
   // Hide the keyboard
   keyboardIsInactive();
 
@@ -314,6 +322,9 @@ function stopAllConversations() {
 function leftAndRightButtonClick() {
   // After clicking on Left button
   $(`#left-button`).click(function () {
+    // Play sfx
+    leftRightButtonsSFX.play();
+
     if (currentKeyboardSet >= 1) {
       // go back one keyboard set
       currentKeyboardSet -= 1;
@@ -327,6 +338,9 @@ function leftAndRightButtonClick() {
 
   // After clicking on Right button
   $(`#right-button`).click(function () {
+    // Play sfx
+    leftRightButtonsSFX.play();
+
     if (currentKeyboardSet < keyboardSets.length - 1) {
       // go forward one keyboard set
       currentKeyboardSet++;
@@ -345,6 +359,9 @@ function sendButtonClick() {
   $(`#send-button`).click(function () {
     // If input-bubble is not empty:
     if ($(`#emoji-input-bubble`).text() != ``) {
+      // Play send SFX
+      sendButtonSFX.play();
+
       // Remove message in input-bubble
       $(`#emoji-input-bubble`).empty();
       // Empty out npcResponseMessage
@@ -375,6 +392,9 @@ function sendButtonClick() {
       } else if (responseType === `angry`) {
         setNpcReaction(angryEmojisArray);
       }
+    } else {
+      // Play error SFX
+      errorSFX.play();
     }
   });
 }
