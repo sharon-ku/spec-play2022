@@ -15,6 +15,7 @@ Also hides overflow.
   --yellow: #ffc83d;
   --pink: #ff80d4;
   --light-purple: #e5e3ff;
+  --dark-grey: #383838;
 }
 
 * {
@@ -105,20 +106,21 @@ canvas {
 
 #keyboard-wrapper {
   z-index: 2;
-  height: 20vh;
+  /* height: 20vh; */
   /* background: green; */
 
   position: fixed;
-  bottom: 30vh;
+  bottom: 0vh;
   left: 0px;
   width: 100%;
-  margin: auto;
 
   display: flex;
-  flex-flow: row wrap;
+  /* flex-flow: row wrap; */
 
   justify-content: center;
   align-items: center;
+
+  margin-bottom: 30px;
 }
 
 #keyboard-section {
@@ -236,10 +238,20 @@ canvas {
   border: 2px solid white;
 }
 
+#exit-button:hover {
+  cursor: pointer;
+  background: var(--dark-grey);
+}
+
 .left-right-buttons {
   font-size: 3rem;
   padding: 0 20px;
   border-radius: 10px;
+}
+
+.left-right-buttons:hover {
+  cursor: pointer;
+  background: white;
 }
 
 #left-button {
@@ -287,4 +299,5 @@ canvas {
 #send-button:hover {
   cursor: pointer;
   font-size: 4rem;
+  background: var(--dark-grey);
 }
