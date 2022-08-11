@@ -118,19 +118,29 @@ function keyboardIsInactive() {
 // Put all keyboard set strings into here
 // The strings will be converted into arrays
 // Source: https://getemoji.com/
+// let keyboardSets = [
+//   // Keyboard set 1: faces
+//   `🙂😄😁🥳😋😛😏😘😍😚😲🤯😧😨😤😡😠🤬😴🥱😅🤨😒🙄🤔`,
+//   // Keyboard set 2: body parts
+//   `👋🖐👌🖖🤏✌️🤞🤘👉🖕👍👎👊🤜👏🙏🤝💪👂🦶👃👀🧠👅💋`,
+//   // Keyboard set 3: objects
+//   `❤️💔💖💝❌💯💤❓🎵💭⌚️📞💡💰💳💎🔫💣🪓🔪⚰️🔮🎊🎉🎁`,
+//   // Keyboard set 4: nature
+//   `🎄🌳🌴🍀🍂🍄💐🥀🌸🌞🌝🌎🪐⭐️🌟✨⚡️🔥🌈☁️❄️☃️💧💦☂️`,
+//   // Keyboard set 5: animals
+//   `🐶🐱🐹🐷🐼🐇🐔🐵🙈🐧🐣🐣🦉🐴🦄🐛🦋🦂🐌🐙🐠🐳🦧🦘🦥`,
+//   // Keyboard set 6: food
+//   `🍎🍌🍉🍇🍓🍒🍑🍍🍅🍆🥑🌶️🌽🍞🥖🧀🍳🍗🌭🍔🍟🍕🥗🍣🍰`,
+// ];
 let keyboardSets = [
   // Keyboard set 1: faces
   `🙂😄😁🥳😋😛😏😘😍😚😲🤯😧😨😤😡😠🤬😴🥱😅🤨😒🙄🤔`,
   // Keyboard set 2: body parts
   `👋🖐👌🖖🤏✌️🤞🤘👉🖕👍👎👊🤜👏🙏🤝💪👂🦶👃👀🧠👅💋`,
-  // Keyboard set 3: objects
-  `❤️💔💖💝❌💯💤❓🎵💭⌚️📞💡💰💳💎🔫💣🪓🔪⚰️🔮🎊🎉🎁`,
-  // Keyboard set 4: nature
-  `🎄🌳🌴🍀🍂🍄💐🥀🌸🌞🌝🌎🪐⭐️🌟✨⚡️🔥🌈☁️❄️☃️💧💦☂️`,
-  // Keyboard set 5: animals
-  `🐶🐱🐹🐷🐼🐇🐔🐵🙈🐧🐣🐣🦉🐴🦄🐛🦋🦂🐌🐙🐠🐳🦧🦘🦥`,
-  // Keyboard set 6: food
-  `🍎🍌🍉🍇🍓🍒🍑🍍🍅🍆🥑🌶️🌽🍞🥖🧀🍳🍗🌭🍔🍟🍕🥗🍣🍰`,
+  // Keyboard set 3: objects + food
+  `❤️💔💯💤❓🎵⌚️💰💳🔫💣🪓🔪⚰️🔮🎉🍔🍟🍕🌶️🍑🍌🍎🍆🍰`,
+  // Keyboard set 4: animals + nature
+  `🐶🐱🐷🐇🐔🙈🐧🐣🦄🦋🐌🐠🐳🦥🌳🍀🌸🌞🌝🌟✨⚡️🔥☃️🌈`,
 ];
 // let keyboardEmojis = `🎑🌄🥻🙉🍅🥽🧶👮‍♀️🙊🤞👩‍👧‍👦⚽️👠🧐🧥💂👩‍🦱🌌🐣⌚️👙😉🐗😞🤛🐨🩰🖕👩‍👦👎😒`;
 // let keyboardObjectEmojis = `🌄🙉🍅🧶👮‍♀️🙊🤞⚽️👠👩‍🌌🐣👙🐗🤛🐨🩰🖕👩‍👦👎🚗👉👐🐽🥑👕🐌🏉🩳🚌🍑✍️🧵🧳🐯`,
@@ -141,7 +151,7 @@ let keyboardEmojis = [];
 let currentKeyboardSet = 0;
 
 // Max emojis user can type in
-let maxInputEmojis = 20;
+let maxInputEmojis = 5; //19
 
 /*
 Handle NPC facial expressions
@@ -260,13 +270,13 @@ function emojiCharacterClicking() {
     );
     console.log(splitInputEmojis.length);
 
-    if (splitInputEmojis.length < maxInputEmojis + 1) {
+    if (splitInputEmojis.length < maxInputEmojis) {
       // Play click SFX
       clickEmojiSFX.play();
 
       // Add emoji to input bubble
       $(`#emoji-input-bubble`).append(containedEmoji);
-    } else if (splitInputEmojis.length === maxInputEmojis + 1) {
+    } else if (splitInputEmojis.length === maxInputEmojis) {
       // if reach max number emojis: play sfx
       errorSFX.play();
     }
@@ -281,8 +291,8 @@ $(document).keydown(function (e) {
   // 8: backspace key
   // 46: delete key
   if (e.keyCode === 8 || e.keyCode === 46) {
-    // Play Error SFX
-    errorSFX.play();
+    // Play Exit button SFX
+    exitButtonSFX.play();
 
     // Grab current string in input and split emojis properly into array
     let currentStringArray = splitter.splitGraphemes(
