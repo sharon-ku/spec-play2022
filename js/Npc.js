@@ -113,7 +113,9 @@ class Npc {
 
     this.faceStyle = new PIXI.TextStyle({
       fontFamily: "Arial",
-      fontSize: 50 * Math.abs(this.scale.x), //100
+      fontSize: 50 * Math.abs(this.scale.x), //100 //
+      // padding is needed so that the top of the emoji doesn't get cut off
+      padding: 50,
       //   // fontStyle: "italic",
       //   // fontWeight: "bold",
       //   // fill: ["#ffffff", "#00ff99"], // gradient
@@ -159,6 +161,8 @@ class Npc {
     this.messageStyle = new PIXI.TextStyle({
       fontFamily: "Arial",
       fontSize: 30 * Math.abs(this.scale.x),
+      // padding is needed so that the top of the emoji doesn't get cut off
+      padding: 50,
     });
     this.messageText = new PIXI.Text("", this.messageStyle);
     this.messageText.x = undefined;
