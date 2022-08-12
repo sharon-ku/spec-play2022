@@ -62,11 +62,15 @@ function setUpScene() {
     addBackground();
 
     // Add cashier NPC
-    let npc = new NpcCashier();
-    npcs.push(npc);
+    let npcCashier = new NpcCashier();
+    npcs.push(npcCashier);
 
     // Add table image
     addTableImage();
+
+    // Add customer adult NPC
+    let npcCustomerAdult = new NpcCustomerAdult();
+    npcs.push(npcCustomerAdult);
   }
 }
 

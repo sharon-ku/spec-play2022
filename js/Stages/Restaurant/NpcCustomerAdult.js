@@ -1,13 +1,13 @@
 // Create a class for an NPC
 // Source: https://www.youtube.com/watch?v=NG5qxx9Ij6Q&ab_channel=DowerChin
-class NpcCashier extends NpcRestaurant {
+class NpcCustomerAdult extends NpcRestaurant {
   constructor() {
     super();
 
     this.x = app.screen.width / 2;
-    this.y = 210;
+    this.y = 400;
 
-    this.speed = 0.2;
+    this.speed = 0.4;
     this.vx = 0;
     this.vy = 0;
   }

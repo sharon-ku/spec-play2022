@@ -127,8 +127,18 @@ class Npc {
       //   // lineJoin: "round",
     });
 
+    // Grapheme Splitter is a library that handles splitting emojis properly
+    // Without it, emojis like this one 👩‍👧‍👦 will count as several emojis
+    let splitter = new GraphemeSplitter();
+    // Keyboard set 1: faces
+    this.possibleFaces = `🙂😄😁🥳😋😛😏😘😍😚😲🤯😧😨😤😡🤬😴🥱😅🤨😒🤑🙄🤔`;
+    // Split two-char emojis and six-char combined emoji
+    this.possibleFacesArray = splitter.splitGraphemes(this.possibleFaces);
+    // Generate random initial face
+    this.randomFace = getRandomItem(this.possibleFacesArray);
+
     // starting message in the face/head emoji
-    this.faceText = new PIXI.Text("🙊", this.faceStyle);
+    this.faceText = new PIXI.Text(this.randomFace, this.faceStyle);
     this.faceText.x = undefined;
     this.faceText.y = undefined;
     // offset from this.x and this.y
