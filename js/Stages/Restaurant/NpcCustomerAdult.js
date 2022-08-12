@@ -10,6 +10,13 @@ class NpcCustomerAdult extends NpcRestaurant {
     this.speed = 0.4;
     this.vx = 0;
     this.vy = 0;
+
+    // // Used to set facing direction
+    // // By default, scale is (1,1)
+    // this.scale = {
+    //   x: 1.8,
+    //   y: 1.8,
+    // };
   }
 
   // Handles random walking

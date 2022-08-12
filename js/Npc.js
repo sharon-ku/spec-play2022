@@ -34,8 +34,8 @@ class Npc {
     // Used to set facing direction
     // By default, scale is (1,1)
     this.scale = {
-      x: 1,
-      y: 1,
+      x: 1.5,
+      y: 1.5,
     };
     // used to set scale of entire body
     this.currentScale = undefined;
@@ -77,11 +77,13 @@ class Npc {
     this.body.y = undefined;
     // offset from this.x and this.y
     this.body.offset = {
-      x: 0,
-      y: 32,
+      x: 0 * Math.abs(this.scale.x),
+      y: 32 * Math.abs(this.scale.y),
     };
     // center the sprite's anchor point
     this.body.anchor.set(0.5);
+    this.body.scale.x = this.scale.x;
+    this.body.scale.y = this.scale.y;
 
     // Make the body clickable to start keyboard communication
     this.clickToInteract(this.body);
@@ -92,14 +94,14 @@ class Npc {
 
     this.head = new PIXI.Graphics();
     this.head.beginFill(0xffffff); //0x5cafe2
-    this.head.radius = 40; //80
+    this.head.radius = 40 * Math.abs(this.scale.x); //80
     this.head.drawCircle(0, 0, this.head.radius);
     this.head.x = undefined;
     this.head.y = undefined;
     // offset from this.x and this.y
     this.head.offset = {
-      x: 0,
-      y: 0,
+      x: 0 * Math.abs(this.scale.x),
+      y: 0 * Math.abs(this.scale.y),
     };
 
     // Make the head clickable to start keyboard communication
@@ -111,7 +113,7 @@ class Npc {
 
     this.faceStyle = new PIXI.TextStyle({
       fontFamily: "Arial",
-      fontSize: 50, //100
+      fontSize: 50 * Math.abs(this.scale.x), //100
       //   // fontStyle: "italic",
       //   // fontWeight: "bold",
       //   // fill: ["#ffffff", "#00ff99"], // gradient
@@ -143,8 +145,8 @@ class Npc {
     this.faceText.y = undefined;
     // offset from this.x and this.y
     this.faceText.offset = {
-      x: 3,
-      y: 0,
+      x: 3 * Math.abs(this.scale.x),
+      y: 0 * Math.abs(this.scale.y),
     };
 
     // center text
@@ -156,15 +158,15 @@ class Npc {
 
     this.messageStyle = new PIXI.TextStyle({
       fontFamily: "Arial",
-      fontSize: 30,
+      fontSize: 30 * Math.abs(this.scale.x),
     });
     this.messageText = new PIXI.Text("", this.messageStyle);
     this.messageText.x = undefined;
     this.messageText.y = undefined;
     // offset from this.x and this.y
     this.messageText.offset = {
-      x: 60, //110
-      y: -25,
+      x: 60 * Math.abs(this.scale.x), //110
+      y: -25 * Math.abs(this.scale.y),
     };
     // center text
     this.messageText.anchor.set(0, 0.5);
@@ -179,7 +181,7 @@ class Npc {
     // these values will be reset to match string length later on
     this.messageBox.tempWidth = 100;
     this.messageBox.tempHeight = 100;
-    this.messageBox.cornerRadius = 150;
+    this.messageBox.cornerRadius = 150 * Math.abs(this.scale.x);
     this.messageBox.drawRoundedRect(
       0,
       0,
@@ -190,7 +192,7 @@ class Npc {
     // padding
     this.messageBox.padding = {
       x: 30,
-      y: 20,
+      y: 20 * Math.abs(this.scale.y),
     };
     // position
     this.messageBox.x = undefined;
@@ -198,7 +200,10 @@ class Npc {
     // offset from this.x and this.y
     this.messageBox.offset = {
       x: this.messageText.offset.x - this.messageBox.padding.x / 2,
-      y: this.messageText.offset.y - this.messageBox.padding.y / 2 - 15,
+      y:
+        this.messageText.offset.y -
+        this.messageBox.padding.y / 2 -
+        15 * Math.abs(this.scale.y),
     };
 
     // ----------------------------
@@ -214,8 +219,8 @@ class Npc {
     this.targetArrow.y = undefined;
     // offset from this.x and this.y
     this.targetArrow.offset = {
-      x: 0,
-      y: -60,
+      x: 0 * Math.abs(this.scale.x),
+      y: -60 * Math.abs(this.scale.y),
     };
     // center the sprite's anchor point
     this.targetArrow.anchor.set(0.5);
@@ -304,16 +309,16 @@ class Npc {
 
   // When hovering over body, scale up and show target arrow
   hover() {
-    this.currentScale = 1.1;
-    this.updateNpcScale(this.currentScale);
+    // this.currentScale = 1.1;
+    // this.updateNpcScale(this.currentScale);
     // Hovering boolean is used to show target arrow only when hovering
     this.hovering = true;
   }
 
   // When leave hovering over body, scale down to normal and hide target arrow
   onHoverOut() {
-    this.currentScale = 1;
-    this.updateNpcScale(this.currentScale);
+    // this.currentScale = 1;
+    // this.updateNpcScale(this.currentScale);
     // Hovering boolean is used to show target arrow only when hovering
     this.hovering = false;
   }
@@ -450,8 +455,8 @@ class Npc {
     this.body.scale.x = this.scale.x;
     this.body.scale.y = this.scale.y;
 
-    this.faceText.scale.x = this.scale.x;
-    this.faceText.scale.y = this.scale.y;
+    this.faceText.scale.x = Math.abs(this.scale.x) / 1.5;
+    this.faceText.scale.y = Math.abs(this.scale.y) / 1.5;
   }
 
   // Update face when clicked on Send button

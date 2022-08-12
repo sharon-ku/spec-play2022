@@ -10,6 +10,13 @@ class NpcCashier extends NpcRestaurant {
     this.speed = 0.2;
     this.vx = 0;
     this.vy = 0;
+
+    // Used to set facing direction
+    // By default, scale is (1,1)
+    // this.scale = {
+    //   x: 1.5,
+    //   y: 1.5,
+    // };
   }
 
   // Handles random walking
