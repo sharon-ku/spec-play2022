@@ -48,7 +48,7 @@ class Npc {
     this.green = `BAFF9A`;
     this.red = `FF6B00`;
     this.blue = `5CAFE2`;
-    this.yellow = `FFC83D`;
+    // this.yellow = `FFC83D`;
     this.purple = `B5AEFF`;
 
     // put the colors in an array
@@ -58,7 +58,7 @@ class Npc {
       this.green,
       this.red,
       this.blue,
-      this.yellow,
+      // this.yellow,
       this.purple
     );
     // randomly choose a tint color; hexcodes are prefixed by `0x`
@@ -167,7 +167,7 @@ class Npc {
     // these values will be reset to match string length later on
     this.messageBox.tempWidth = 100;
     this.messageBox.tempHeight = 100;
-    this.messageBox.cornerRadius = 150; //40
+    this.messageBox.cornerRadius = 150;
     this.messageBox.drawRoundedRect(
       0,
       0,

@@ -16,10 +16,37 @@ keyboardIsInactive();
 let app = new PIXI.Application({
   transparent: false,
   width: 1000, //640
-  height: 500, //360
+  height: 487, //360
   antialias: true,
 });
 document.body.appendChild(app.view);
+
+// const backgroundContainer = new PIXI.Container();
+//
+// app.stage.addChild(backgroundContainer);
+
+let restaurantBackground = PIXI.Sprite.from(
+  "assets/images/restaurant/background.png"
+);
+// body's position
+restaurantBackground.x = app.screen.width / 2;
+restaurantBackground.y = app.screen.height / 2;
+
+// center the sprite's anchor point
+restaurantBackground.anchor.set(0.5);
+
+app.stage.addChild(restaurantBackground);
+
+//
+// backgroundContainer.addChild(restaurantBackground);
+//
+// // Move container to the center
+// backgroundContainer.x = app.screen.width / 2;
+// backgroundContainer.y = app.screen.height / 2;
+//
+// // Center bunny sprite in local container coordinates
+// backgroundContainer.pivot.x = backgroundContainer.width / 2;
+// backgroundContainer.pivot.y = backgroundContainer.height / 2;
 
 // store all npcs in here
 let npcs = [];
@@ -47,11 +74,12 @@ function createManyNpcs() {
 
 // Depth sorting for NPCs based on y positions
 function depthSortNpcs() {
-  app.stage.children.sort(sortByY);
-
-  for (let i = 0; i < app.stage.children.length; i++) {
-    app.stage.children[i].zIndex = i;
-  }
+  // REMOVED FOR NOW: please implement this back later
+  // app.stage.children.sort(sortByY);
+  //
+  // for (let i = 0; i < app.stage.children.length; i++) {
+  //   app.stage.children[i].zIndex = i;
+  // }
 }
 
 // Return random value between min and max
@@ -134,7 +162,7 @@ function keyboardIsInactive() {
 // ];
 let keyboardSets = [
   // Keyboard set 1: faces
-  `🙂😄😁🥳😋😛😏😘😍😚😲🤯😧😨😤😡😠🤬😴🥱😅🤨😒🙄🤔`,
+  `🙂😄😁🥳😋😛😏😘😍😚😲🤯😧😨😤😡🤬😴🥱😅🤨😒🤑🙄🤔`,
   // Keyboard set 2: body parts
   `👋🖐👌🖖🤏✌️🤞🤘👉🖕👍👎👊🤜👏🙏🤝💪👂🦶👃👀🧠👅💋`,
   // Keyboard set 3: objects + food
@@ -383,7 +411,7 @@ function sendButtonClick() {
       $(`#npc-response-message`).empty();
 
       // Randomly select the response type of NPC
-      responseType = random(emojiCategories);
+      responseType = getRandomItem(emojiCategories);
       console.log(responseType);
 
       // Update facial and verbal reaction based on the response type
@@ -413,6 +441,18 @@ function sendButtonClick() {
   });
 }
 
+// Get random item from an array
+// Code from: https://www.programiz.com/javascript/examples/get-random-item
+function getRandomItem(arr) {
+  // get random index value
+  const randomIndex = Math.floor(Math.random() * arr.length);
+
+  // get random item
+  const item = arr[randomIndex];
+
+  return item;
+}
+
 // Reaction is composed of two parts: the face and the response message
 function setNpcReaction(reactionArray) {
   // (1) Update facial expression of emoji
@@ -425,7 +465,7 @@ function setNpcReaction(reactionArray) {
 // Update NPC's face based on response type
 function updateNpcFace(reactionArray) {
   // Fetch an emoji
-  nextEmojiToDisplay = random(reactionArray);
+  nextEmojiToDisplay = getRandomItem(reactionArray);
   // Update emoji face and response message
   $(`#emoji-face`).text(nextEmojiToDisplay);
 
@@ -447,9 +487,9 @@ function composeAMessage(emojiArraySet) {
     let newCharacter;
     // The message is composed of facial expressions and other emojis
     if (Math.random() < 0.2) {
-      newCharacter = random(emojiArraySet);
+      newCharacter = getRandomItem(emojiArraySet);
     } else {
-      newCharacter = random(otherEmojisArray);
+      newCharacter = getRandomItem(otherEmojisArray);
     }
 
     npcResponseMessage += newCharacter;
@@ -469,17 +509,17 @@ function composeAMessage(emojiArraySet) {
 p5 below - unused for now
 -------------------------*/
 
-/**
-Description of preload
-*/
-function preload() {}
-
-/**
-Description of setup
-*/
-function setup() {}
-
-/**
-Description of draw()
-*/
-function draw() {}
+// /**
+// Description of preload
+// */
+// function preload() {}
+//
+// /**
+// Description of setup
+// */
+// function setup() {}
+//
+// /**
+// Description of draw()
+// */
+// function draw() {}

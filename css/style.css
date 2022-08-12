@@ -58,6 +58,8 @@ canvas {
   /* justify-content: center; */
   /* align-items: center; */
   /* width: 100%; */
+
+  border: 5px solid black;
 }
 
 #body-wrapper {
