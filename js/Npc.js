@@ -1,7 +1,7 @@
 // Create a class for an NPC
 // Source: https://www.youtube.com/watch?v=NG5qxx9Ij6Q&ab_channel=DowerChin
 class Npc {
-  constructor({ x, y }) {
+  constructor() {
     // Put npc inside a container which will later be used for depth sorting (in script.js)
     this.npcContainer = new PIXI.Container();
     // Add npcContainer to the PIXI app stage
@@ -15,8 +15,10 @@ class Npc {
     // ----------------------------
 
     // Npc position: all body parts are offset from these coordinates
-    this.x = x;
-    this.y = y;
+    this.x =
+      canvasPadding + Math.random() * (app.screen.width - canvasPadding * 2);
+    this.y =
+      canvasPadding + Math.random() * (app.screen.height - canvasPadding * 2);
 
     this.speed = 0.5;
     this.vx = 0;

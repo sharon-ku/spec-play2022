@@ -7,6 +7,9 @@ Description will go here
 
 "use strict";
 
+// Different scenes in this game: restaurant
+let stage = `restaurant`;
+
 // Keyboard only becomes active when clicked on an npc to talk to
 let keyboardActive = false;
 keyboardIsInactive();
@@ -28,18 +31,6 @@ let canvasPadding = 100;
 //
 // app.stage.addChild(backgroundContainer);
 
-let restaurantBackground = PIXI.Sprite.from(
-  "assets/images/restaurant/background.png"
-);
-// body's position
-restaurantBackground.x = app.screen.width / 2;
-restaurantBackground.y = app.screen.height / 2;
-
-// center the sprite's anchor point
-restaurantBackground.anchor.set(0.5);
-
-app.stage.addChild(restaurantBackground);
-
 //
 // backgroundContainer.addChild(restaurantBackground);
 //
@@ -59,20 +50,62 @@ const NUM_NPCS = 8;
 // Create many npcs
 createManyNpcs();
 
+// Set up restaurant scene
+setUpScene();
+
 // Depth sorting for NPCs
 depthSortNpcs();
 
+function setUpScene() {
+  if (stage === `restaurant`) {
+    // Add image in scene background
+    addBackground();
+
+    // Add cashier NPC
+    let npc = new NpcCashier();
+    npcs.push(npc);
+
+    // Add table image
+    addTableImage();
+  }
+}
+
+// Add image in scene background
+function addBackground() {
+  let restaurantBackground = PIXI.Sprite.from(
+    "assets/images/restaurant/background.png"
+  );
+  // body's position
+  restaurantBackground.x = app.screen.width / 2;
+  restaurantBackground.y = app.screen.height / 2;
+
+  // center the sprite's anchor point
+  restaurantBackground.anchor.set(0.5);
+
+  app.stage.addChild(restaurantBackground);
+}
+
+// Add table image
+function addTableImage() {
+  let tableImage = PIXI.Sprite.from("assets/images/restaurant/table.png");
+  // body's position
+  tableImage.x = app.screen.width / 2;
+
+  tableImage.y = app.screen.height - 207 / 2;
+
+  // center the sprite's anchor point
+  tableImage.anchor.set(0.5);
+
+  app.stage.addChild(tableImage);
+}
+
 // Create many npcs
 function createManyNpcs() {
-  for (let i = 0; i < NUM_NPCS; i++) {
-    let npcProperties = {
-      x: canvasPadding + Math.random() * (app.screen.width - canvasPadding * 2),
-      y:
-        canvasPadding + Math.random() * (app.screen.height - canvasPadding * 2),
-    };
-
-    let npc = new Npc(npcProperties);
-    npcs.push(npc);
+  if (stage != `restaurant`) {
+    for (let i = 0; i < NUM_NPCS; i++) {
+      let npc = new Npc();
+      npcs.push(npc);
+    }
   }
 }
 
