@@ -21,6 +21,9 @@ let app = new PIXI.Application({
 });
 document.body.appendChild(app.view);
 
+// border around which objects (like NPCs) cannot pass through
+let canvasPadding = 100;
+
 // const backgroundContainer = new PIXI.Container();
 //
 // app.stage.addChild(backgroundContainer);
@@ -63,8 +66,9 @@ depthSortNpcs();
 function createManyNpcs() {
   for (let i = 0; i < NUM_NPCS; i++) {
     let npcProperties = {
-      x: Math.random() * app.screen.width,
-      y: Math.random() * app.screen.height,
+      x: canvasPadding + Math.random() * (app.screen.width - canvasPadding * 2),
+      y:
+        canvasPadding + Math.random() * (app.screen.height - canvasPadding * 2),
     };
 
     let npc = new Npc(npcProperties);
