@@ -179,9 +179,11 @@ class Npc {
     this.messageBox.beginFill(0xffffff); //0x5cafe2
     // temporarily set widht and height to 100 so that cornerRadius works properly
     // these values will be reset to match string length later on
-    this.messageBox.tempWidth = 100;
+    this.messageBox.tempWidth = 150; //100
     this.messageBox.tempHeight = 100;
     this.messageBox.cornerRadius = 150 * Math.abs(this.scale.x);
+    // Outline: https://pixijs.download/dev/docs/PIXI.Graphics.html#lineStyle
+    this.messageBox.lineStyle(2, 0x000000);
     this.messageBox.drawRoundedRect(
       0,
       0,
@@ -191,7 +193,7 @@ class Npc {
     );
     // padding
     this.messageBox.padding = {
-      x: 30,
+      x: 30 * Math.abs(this.scale.x),
       y: 20 * Math.abs(this.scale.y),
     };
     // position

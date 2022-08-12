@@ -5,7 +5,7 @@ class NpcCustomerAdult extends NpcRestaurant {
     super();
 
     this.x = app.screen.width / 2;
-    this.y = 400;
+    this.y = 370;
 
     this.speed = 0.4;
     this.vx = 0;

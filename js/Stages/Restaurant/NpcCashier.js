@@ -5,7 +5,7 @@ class NpcCashier extends NpcRestaurant {
     super();
 
     this.x = app.screen.width / 2;
-    this.y = 210;
+    this.y = 230;
 
     this.speed = 0.2;
     this.vx = 0;

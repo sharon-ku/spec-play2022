@@ -18,7 +18,7 @@ keyboardIsInactive();
 // For nice resolution on circle, source: https://stackoverflow.com/questions/41932258/how-do-i-antialias-graphics-circle-in-pixijs
 let app = new PIXI.Application({
   transparent: false,
-  width: 1000, //640
+  width: 999, //640
   height: 487, //360
   antialias: true,
 });
