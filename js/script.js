@@ -68,9 +68,10 @@ function setUpScene() {
     // Add table image
     addTableImage();
 
-    // Add customer adult NPC
+    // Add customer adult and customer child NPCs
     let npcCustomerAdult = new NpcCustomerAdult();
-    npcs.push(npcCustomerAdult);
+    let npcCustomerChild = new NpcCustomerChild();
+    npcs.push(npcCustomerAdult, npcCustomerChild);
   }
 }
 
